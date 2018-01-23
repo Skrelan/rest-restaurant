@@ -13,24 +13,24 @@
 #### /v1
 * `/users`:
   * Description : Get user(s) info
-  * Method Type: `GET`
-  * Input :
-  * Output :
+    * Method Type: `GET`
+    * Input :
+    * Output :
 
   * Description : Update a user
-  * Method Type: `PUT`
-  * Input :
-  * Output :    
+    * Method Type: `PUT`
+    * Input :
+    * Output :    
 
   * Description : Create a user
-  * Method Type: `POST`
-  * Input :
-  * Output :
-  
+    * Method Type: `POST`
+    * Input :
+    * Output :
+
   * Description :
-  * Method Type: `DELETE`
-  * Input :
-  * Output :
+    * Method Type: `DELETE`
+    * Input :
+    * Output :
 
 
 * `/restaurants`:
