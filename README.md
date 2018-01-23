@@ -11,76 +11,68 @@
 
 ### Endpoints
 #### /v1
-  * `/users`:
-    * Description : Get user(s) info
+* `/users`:
+  * Description : Get user(s) info
     * Method Type: `GET`
     * Input :
     * Output :
 
-    <br>    
-    * Description : Update a user
+  * Description : Update a user
     * Method Type: `PUT`
     * Input :
     * Output :    
 
-    <br>
-    * Description : Create a user
+  * Description : Create a user
     * Method Type: `POST`
     * Input :
     * Output :
 
-    <br>      
-    * Description :
+  * Description :
     * Method Type: `DELETE`
     * Input :
     * Output :
 
 
-  * `/restaurants`:
-    * Description : Get restaurant(s) by name / city/ category/total score
+* `/restaurants`:
+
+  * Description : Get restaurant(s) by name / city/ category/total score
     * Method Type: `GET`
     * Input :
     * Output :
 
-    <br>    
-    * Description : Update a restaurant
+  * Description : Update a restaurant
     * Method Type: `PUT`
     * Input :
     * Output :    
 
-    <br>
-    * Description : Create a restaurant
+  * Description : Create a restaurant
     * Method Type: `POST`
     * Input :
     * Output :
 
-    <br>      
-    * Description :
+  * Description :
     * Method Type: `DELETE`
     * Input :
     * Output :
 
 
-  * `/reviews`:
-    * Description : Create a rating for a restaurant by a user
+* `/reviews`:
+  * Description : Create a rating for a restaurant by a user
     * Method Type: `POST`
     * Input :
     * Output :
 
-    <br>    
-    * Description : Update a rating for a restaurant by a user
+  * Description : Update a rating for a restaurant by a user
     * Method Type: `PUT`
     * Input :
     * Output :    
 
-    <br>
-    * Description :
+  * Description :
     * Method Type: `GET`
     * Input :
     * Output :
 
-    <br>      
-    * Description :
+  * Description :
     * Method Type: `GET`
     * Input :
     * Output :
@@ -88,3 +80,4 @@
 -----
 
 ### Database Schema:
+The DB has 4 tables, they are as follows:
