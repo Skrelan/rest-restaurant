@@ -88,3 +88,4 @@
 -----
 
 ### Database Schema:
+The DB has 4 tables, they are as follows:
