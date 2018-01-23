@@ -16,17 +16,17 @@
   * Method Type: `GET`
   * Input :
   * Output :
-  </br>
+
   * Description : Update a user
   * Method Type: `PUT`
   * Input :
   * Output :    
-  </br>
+
   * Description : Create a user
   * Method Type: `POST`
   * Input :
   * Output :
-  </br>
+  
   * Description :
   * Method Type: `DELETE`
   * Input :
