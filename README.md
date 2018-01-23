@@ -12,7 +12,6 @@
 ### Endpoints
 #### /v1
 * `/users`:
-
   * Description : Get user(s) info
   * Method Type: `GET`
   * Input :
@@ -27,7 +26,7 @@
   * Method Type: `POST`
   * Input :
   * Output :
-
+  </br>
   * Description :
   * Method Type: `DELETE`
   * Input :
