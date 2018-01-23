@@ -12,16 +12,17 @@
 ### Endpoints
 #### /v1
 * `/users`:
+
   * Description : Get user(s) info
   * Method Type: `GET`
   * Input :
   * Output :
-
+  </br>
   * Description : Update a user
   * Method Type: `PUT`
   * Input :
   * Output :    
-
+  </br>
   * Description : Create a user
   * Method Type: `POST`
   * Input :
@@ -34,6 +35,7 @@
 
 
 * `/restaurants`:
+
   * Description : Get restaurant(s) by name / city/ category/total score
   * Method Type: `GET`
   * Input :
