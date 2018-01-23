@@ -16,17 +16,17 @@
     * Method Type: `GET`
     * Input :
     * Output :
-    <br>    
+
     * Description : Update a user
     * Method Type: `PUT`
     * Input :
     * Output :    
-    <br>
+
     * Description : Create a user
     * Method Type: `POST`
     * Input :
     * Output :
-    <br>      
+
     * Description :
     * Method Type: `DELETE`
     * Input :
@@ -38,17 +38,17 @@
     * Method Type: `GET`
     * Input :
     * Output :
-    <br>    
+
     * Description : Update a restaurant
     * Method Type: `PUT`
     * Input :
     * Output :    
-    <br>
+
     * Description : Create a restaurant
     * Method Type: `POST`
     * Input :
     * Output :
-    <br>      
+         
     * Description :
     * Method Type: `DELETE`
     * Input :
@@ -60,17 +60,17 @@
     * Method Type: `POST`
     * Input :
     * Output :
-    <br>    
+
     * Description : Update a rating for a restaurant by a user
     * Method Type: `PUT`
     * Input :
     * Output :    
-    <br>
+
     * Description :
     * Method Type: `GET`
     * Input :
     * Output :
-    <br>      
+
     * Description :
     * Method Type: `GET`
     * Input :
