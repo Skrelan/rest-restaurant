@@ -10,10 +10,10 @@ type Address struct {
 
 // User is the structure for Users data
 type User struct {
-	ID        string `json:"id,omitempty"`
-	FirstName string `json:"first_name,omitempty"`
-	LastName  string `json:"last_name,omitempty"`
-	Phone     string `json:"phone,omitempty"`
+	ID        string `json:"id,omitempty",db:"id"`
+	FirstName string `json:"first_name,omitempty",db:"first_name"`
+	LastName  string `json:"last_name,omitempty",db:"last_name"`
+	Phone     string `json:"phone,omitempty",db:"phone"`
 }
 
 // Restaurant is the structure for Restraunts data
