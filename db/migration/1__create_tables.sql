@@ -1,13 +1,5 @@
 CREATE DATABASE rest_restaurants;
 
-DROP TABLE IF EXISTS addresses CASCADE;
-CREATE TABLE addresses (
-	id SERIAL PRIMARY KEY,
-	street_address VARCHAR(95) NOT NULL,
-	city VARCHAR(40) NOT NULL,
-	state VARCHAR(4) NOT NULL
-) ;
-
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
@@ -22,12 +14,21 @@ CREATE TABLE restaurants (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
   category VARCHAR(50) NOT NULL,
-	address_id INT NOT NULL,
-  constraint fk__restaurants__addresses
-   foreign key (address_id)
-   REFERENCES addresses (id),
-  UNIQUE (name, category, address_id )
+  UNIQUE (name, category)
 );
+
+DROP TABLE IF EXISTS venues CASCADE;
+CREATE TABLE venues (
+	id SERIAL PRIMARY KEY,
+	street_address VARCHAR(95) NOT NULL,
+	city VARCHAR(40) NOT NULL,
+	state VARCHAR(4) NOT NULL,
+	restaurant_id INT NOT NULL,
+	constraint fk__venues__restaurants
+	 foreign key (restaurant_id)
+	 REFERENCES restaurants (id),
+	UNIQUE (street_address, city, state, restaurant_id)
+) ;
 
 DROP TABLE IF EXISTS ratings CASCADE;
 CREATE TABLE ratings (
@@ -36,15 +37,16 @@ CREATE TABLE ratings (
   food SMALLINT NOT NULL,
 	cleanliness_service SMALLINT NOT NULL,
   total_score SMALLINT NOT NULL,
-  restaurant_id int NOT NULL,
+  venue_id int NOT NULL,
   user_id int NOT NULL,
+	comments VARCHAR(400),
   date_time_created TIMESTAMP,
   date_time_updated TIMESTAMP,
-  constraint fk__rating__restaurants
-   foreign key (restaurant_id)
-   REFERENCES restaurants (id),
+  constraint fk__rating__venues
+   foreign key (venue_id)
+   REFERENCES venues (id),
   constraint fk__rating__users
    foreign key (user_id)
    REFERENCES users (id),
-  UNIQUE ( user_id, restaurant_id )
+  UNIQUE ( user_id, venue_id )
 );
