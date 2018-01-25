@@ -23,6 +23,7 @@ CREATE TABLE venues (
 	street_address VARCHAR(95) NOT NULL,
 	city VARCHAR(40) NOT NULL,
 	state VARCHAR(4) NOT NULL,
+	zip_code  VARCHAR(4) NOT NULL,
 	restaurant_id INT NOT NULL,
 	constraint fk__venues__restaurants
 	 foreign key (restaurant_id)
