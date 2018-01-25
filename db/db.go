@@ -1,8 +1,9 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
+
+	sql "github.com/jmoiron/sqlx"
 
 	_ "github.com/lib/pq"
 	"github.com/skrelan/LogrusWrapper/log"
@@ -31,7 +32,7 @@ func (cfg *configs) ready() {
 
 func (cfg *configs) startConnection() (*sql.DB, error) {
 	params := "dbname=%s user=%s password=%s host=%s sslmode=%s"
-	db, err := sql.Open(cfg.DBType, fmt.Sprintf(params, cfg.Host, cfg.User, cfg.Token, cfg.Host, cfg.SSLMode))
+	db, err := sql.Open(cfg.DBType, fmt.Sprintf(params, cfg.DBName, cfg.User, cfg.Token, cfg.Host, cfg.SSLMode))
 	if err != nil {
 		log.Error("DB Connection failed")
 		return nil, err
@@ -46,21 +47,11 @@ func GetAllUsers() (*[]models.User, error) {
 	if db == nil {
 		return nil, err
 	}
-
-	rows, err := db.Query(GETALLUSERS)
+	err = db.Select(&users, GETALLUSERS)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	for rows.Next() {
-		user := models.User{}
-		err := rows.Scan(&user)
-		if err != nil {
-			log.Warn("Record failed")
-			continue
-		}
-		users = append(users, user)
-	}
+
 	return &users, nil
 }
 
