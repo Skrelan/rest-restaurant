@@ -11,6 +11,6 @@ INSERT INTO venues (street_address, city, state, restaurant_id) Values ('123 Bus
 INSERT INTO venues (street_address, city, state, restaurant_id) Values ('250 Brandon St.','San Jose','CA', 2);
 INSERT INTO venues (street_address, city, state, restaurant_id) Values ('1 Hackerway','Menlo Park','CA', 3);
 
-INSERT INTO raitings (cost, food, cleanliness_service, total_score, venue_id, user_id, comments) VALUES (3,3,3,3,1,1,'Serve''s the most overpriced food.');
-INSERT INTO raitings (cost, food, cleanliness_service, total_score, venue_id, user_id, comments) VALUES (2,4,1,3,1,2,'Pricy, but nice.');
-INSERT INTO raitings (cost, food, cleanliness_service, total_score, venue_id, user_id, comments) VALUES (5,5,5,3,2,1,'');
+INSERT INTO ratings (cost, food, cleanliness_service, total_score, venue_id, user_id, comments) VALUES (3,3,3,3,1,1,'Serve''s the most overpriced food.');
+INSERT INTO ratings (cost, food, cleanliness_service, total_score, venue_id, user_id, comments) VALUES (2,4,1,3,1,2,'Pricy, but nice.');
+INSERT INTO ratings (cost, food, cleanliness_service, total_score, venue_id, user_id, comments) VALUES (5,5,5,3,2,1,'');
