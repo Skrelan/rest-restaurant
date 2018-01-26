@@ -41,13 +41,15 @@ func (cfg *configs) startConnection() (*sql.DB, error) {
 }
 
 // GetAllUsers get's all the users
-func GetAllUsers() (*[]models.User, error) {
+func GetAllUsers(limit, offset *string) (*[]models.User, error) {
 	users := make([]models.User, 0, 0)
 	db, err := cfg.startConnection()
 	if db == nil {
 		return nil, err
 	}
-	err = db.Select(&users, GETALLUSERS)
+	query := fmt.Sprintf(GETALLUSERS, *limit, *offset)
+	log.Info("running query:", query)
+	err = db.Select(&users, query)
 	if err != nil {
 		return nil, err
 	}
