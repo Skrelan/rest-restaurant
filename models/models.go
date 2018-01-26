@@ -18,16 +18,16 @@ type User struct {
 
 // Restaurant is the structure for Restraunts data
 type Restaurant struct {
-	ID       string `json:"id,omitempty" db:"restaurant_id"`
-	Name     string `json:"name,omitempty" db:"name"`
-	Category string `json:"category,omitempty" db:"category"`
+	ID       string   `json:"id,omitempty" db:"restaurant_id"`
+	Name     string   `json:"name,omitempty" db:"name"`
+	Category string   `json:"category,omitempty" db:"category"`
+	Venues   *[]Venue `json:"venues,omitempty"`
 }
 
 // Venue is the structure that holds information of venues of Restraunt
 type Venue struct {
-	ID        string `json:"id,omitempty" db:"id"`
-	Restraunt *Restaurant
-	Address   *Address
+	ID      string   `json:"id,omitempty" db:"id"`
+	Address *Address `json:"address,omitempty"`
 }
 
 // Rating is the structure for the Ratings data
@@ -37,7 +37,8 @@ type Rating struct {
 	CleanlinessService int64  `json:"cleanliness_service,omitempty" db:"cleanliness_service"`
 	TotalScore         int64  `json:"total_score,omitempty" db:"total_score"`
 	RestaurantID       int64  `json:"restaurant_id,omitempty" db:"restaurant_id"`
+	VenueID            int64  `json:"venue_id,omitempty" db:"venue_id"`
 	UserID             int64  `json:"user_id,omitempty" db:"user_id"`
-	DateCreated        string `json:"date_created,omitempty" db:"date_created"`
-	DateUpdated        string `json:"date_updated,omitempty" db:"date_updated"`
+	DateCreated        string `json:"date_time_created,omitempty" db:"date_time_created"`
+	DateUpdated        string `json:"date_time_updated,omitempty" db:"date_time_updated"`
 }

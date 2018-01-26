@@ -37,7 +37,7 @@ CREATE TABLE ratings (
 	cost SMALLINT NOT NULL,
   food SMALLINT NOT NULL,
 	cleanliness_service SMALLINT NOT NULL,
-  total_score SMALLINT NOT NULL,
+  total_score NUMERIC(5,2) NOT NULL,
   venue_id int NOT NULL,
   user_id int NOT NULL,
 	comments VARCHAR(400),

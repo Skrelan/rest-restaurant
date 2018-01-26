@@ -22,7 +22,17 @@ func AddUser(w http.ResponseWriter, req *http.Request) {
 }
 
 func GetUsers(w http.ResponseWriter, req *http.Request) {
-	res, err := db.GetAllUsers()
+	params := req.URL.Query()
+	limit := params.Get("limit")
+	if len(limit) == 0 {
+		limit = "100"
+	}
+	offset := params.Get("offset")
+	if len(offset) == 0 {
+		offset = "0"
+	}
+
+	res, err := db.GetAllUsers(&limit, &offset)
 	if err != nil {
 		log.Error(err)
 		json.NewEncoder(w).Encode("DB connection failed")
