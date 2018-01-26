@@ -1,7 +1,9 @@
 package db
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 
 	sql "github.com/jmoiron/sqlx"
 
@@ -13,21 +15,25 @@ import (
 var cfg configs
 
 type configs struct {
-	Host    string
-	DBType  string
-	DBName  string
-	User    string
-	Token   string
-	SSLMode string
+	Host    string `json:"host"`
+	DBType  string `json:"db_type"`
+	DBName  string `json:"db_name"`
+	User    string `json:"user"`
+	Token   string `json:"token"`
+	SSLMode string `json:"ssl_mode"`
 }
 
 func (cfg *configs) ready() {
-	cfg.Host = "localhost"
-	cfg.DBType = "postgres"
-	cfg.DBName = "rest_restaurants"
-	cfg.User = "postgres"
-	cfg.Token = ""
-	cfg.SSLMode = "disable"
+	plan, err := ioutil.ReadFile("db/config.json")
+	if err != nil {
+		log.Error("unable to read config.json | ", err)
+		return
+	}
+	err = json.Unmarshal(plan, cfg)
+	if err != nil {
+		log.Error("unable to unmarshal json | ", err)
+	}
+	log.Info("DB config set")
 }
 
 func (cfg *configs) startConnection() (*sql.DB, error) {
@@ -59,5 +65,4 @@ func GetAllUsers(limit, offset *string) (*[]models.User, error) {
 
 func init() {
 	cfg.ready()
-	log.Info("DB config set")
 }
