@@ -1,7 +1,7 @@
 package models
 
-// Address is the structure for Addresses data
-type Address struct {
+// Venue is the structure for Addresses data
+type Venue struct {
 	StreetAddress string `json:"street_address,omitempty" db:"street_address"`
 	City          string `json:"city,omitempty" db:"city"`
 	State         string `json:"state,omitempty" db:"state"`
@@ -18,27 +18,29 @@ type User struct {
 
 // Restaurant is the structure for Restraunts data
 type Restaurant struct {
-	ID       string   `json:"id,omitempty" db:"restaurant_id"`
-	Name     string   `json:"name,omitempty" db:"name"`
-	Category string   `json:"category,omitempty" db:"category"`
-	Venues   *[]Venue `json:"venues,omitempty"`
-}
-
-// Venue is the structure that holds information of venues of Restraunt
-type Venue struct {
-	ID      string   `json:"id,omitempty" db:"id"`
-	Address *Address `json:"address,omitempty"`
+	ID       int64  `json:"id,omitempty" db:"id"`
+	Name     string `json:"name,omitempty" db:"name"`
+	Category string `json:"category,omitempty" db:"category"`
+	Venue    *Venue `json:"venue,omitempty" db:"a,prefix=a."`
 }
 
 // Rating is the structure for the Ratings data
 type Rating struct {
-	Cost               int64  `json:"cost,omitempty" db:"cost"`
-	Food               int64  `json:"food,omitempty" db:"food"`
-	CleanlinessService int64  `json:"cleanliness_service,omitempty" db:"cleanliness_service"`
-	TotalScore         int64  `json:"total_score,omitempty" db:"total_score"`
-	RestaurantID       int64  `json:"restaurant_id,omitempty" db:"restaurant_id"`
-	VenueID            int64  `json:"venue_id,omitempty" db:"venue_id"`
-	UserID             int64  `json:"user_id,omitempty" db:"user_id"`
-	DateCreated        string `json:"date_time_created,omitempty" db:"date_time_created"`
-	DateUpdated        string `json:"date_time_updated,omitempty" db:"date_time_updated"`
+	Cost               int64   `json:"cost,omitempty" db:"cost"`
+	Food               int64   `json:"food,omitempty" db:"food"`
+	CleanlinessService int64   `json:"cleanliness_service,omitempty" db:"cleanliness_service"`
+	TotalScore         float64 `json:"total_score,omitempty" db:"total_score"`
+	RestaurantID       int64   `json:"restaurant_id,omitempty" db:"restaurant_id"`
+	VenueID            int64   `json:"venue_id,omitempty" db:"venue_id"`
+	UserID             int64   `json:"user_id,omitempty" db:"user_id"`
+	Comments           string  `json:"comments,omitempty" db:"comments"`
+	DateCreated        string  `json:"date_time_created,omitempty" db:"date_time_created"`
+	DateUpdated        string  `json:"date_time_updated,omitempty" db:"date_time_updated"`
+}
+
+// UserRestaurantRating is the structure used for Ratings feed
+type UserRestaurantRating struct {
+	User       *User       `json:"user" db:"u,prefix=u."`
+	Restaurant *Restaurant `json:"restaurant" db:"r,prefix=r."`
+	Rating     *Rating     `json:"rating" db:"rate,prefix=rate."`
 }

@@ -46,7 +46,7 @@ func (cfg *configs) startConnection() (*sql.DB, error) {
 	return db, nil
 }
 
-// GetAllUsers get's all the users
+// GetAllUsers gets all the users
 func GetAllUsers(limit, offset *string) (*[]models.User, error) {
 	users := make([]models.User, 0, 0)
 	db, err := cfg.startConnection()
@@ -54,6 +54,7 @@ func GetAllUsers(limit, offset *string) (*[]models.User, error) {
 		return nil, err
 	}
 	query := fmt.Sprintf(GETALLUSERS, *limit, *offset)
+	defer db.Close()
 	log.Info("running query:", query)
 	err = db.Select(&users, query)
 	if err != nil {
@@ -61,6 +62,109 @@ func GetAllUsers(limit, offset *string) (*[]models.User, error) {
 	}
 
 	return &users, nil
+}
+
+// GetUserByIDs gets all the user's info
+func GetUserByIDs(ids *string) (*[]models.User, error) {
+	users := make([]models.User, 0, 0)
+	db, err := cfg.startConnection()
+	if db == nil {
+		return nil, err
+	}
+	query := fmt.Sprintf(GETUSERBYIDS, *ids)
+	defer db.Close()
+	log.Info("running query:", query)
+	err = db.Select(&users, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return &users, nil
+}
+
+// GetAllVenues get's all the restaurants
+func GetAllVenues(limit, offset *string) (*[]models.Restaurant, error) {
+	restaurants := make([]models.Restaurant, 0, 0)
+	db, err := cfg.startConnection()
+	if db == nil {
+		return nil, err
+	}
+	query := fmt.Sprintf(GETALLVENUES, *limit, *offset)
+	defer db.Close()
+	log.Info("running query:", query)
+	err = db.Select(&restaurants, query)
+	if err != nil {
+		return nil, err
+	}
+	return &restaurants, nil
+}
+
+// GetVenuesByIDs gets venue(s) by id(s)
+func GetVenuesByIDs(ids *string) (*[]models.Restaurant, error) {
+	restaurants := make([]models.Restaurant, 0, 0)
+	db, err := cfg.startConnection()
+	if db == nil {
+		return nil, err
+	}
+	query := fmt.Sprintf(GETVENUESBYIDS, *ids)
+	defer db.Close()
+	log.Info("running query:", query)
+	err = db.Select(&restaurants, query)
+	if err != nil {
+		return nil, err
+	}
+	return &restaurants, nil
+}
+
+// GetVenuesWhere gets venue(s) by id(s)
+func GetVenuesWhere(where, limit, offset *string) (*[]models.Restaurant, error) {
+	restaurants := make([]models.Restaurant, 0, 0)
+	db, err := cfg.startConnection()
+	if db == nil {
+		return nil, err
+	}
+	query := fmt.Sprintf(GETVENUESWHERE, *where, *limit, *offset)
+	defer db.Close()
+	log.Info("running query:", query)
+	err = db.Select(&restaurants, query)
+	if err != nil {
+		return nil, err
+	}
+	return &restaurants, nil
+}
+
+// GetAllRatings get's all the reviews by restaurant/user/venue
+func GetAllRatings(limit, offset *string) (*[]models.UserRestaurantRating, error) {
+	ratings := make([]models.UserRestaurantRating, 0, 0)
+	db, err := cfg.startConnection()
+	if db == nil {
+		return nil, err
+	}
+	query := fmt.Sprintf(GETALLRATINGS, *limit, *offset)
+	defer db.Close()
+	log.Info("running query:", query)
+	err = db.Select(&ratings, query)
+	if err != nil {
+		return nil, err
+	}
+	return &ratings, nil
+}
+
+// GetRatingsWhere gets the reviews by restaurant/user/venue
+func GetRatingsWhere(where, limit, offset *string) (*[]models.UserRestaurantRating, error) {
+	ratings := make([]models.UserRestaurantRating, 0, 0)
+	db, err := cfg.startConnection()
+	if db == nil {
+		return nil, err
+	}
+	query := fmt.Sprintf(GETRATINGSWHERE, *where, *limit, *offset)
+	defer db.Close()
+	log.Info("running query:", query)
+	err = db.Select(&ratings, query)
+	if err != nil {
+		return nil, err
+	}
+	return &ratings, nil
 }
 
 func init() {
