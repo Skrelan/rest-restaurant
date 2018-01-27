@@ -2,9 +2,11 @@ package middleware
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 
+	"github.com/gorilla/mux"
 	"github.com/skrelan/LogrusWrapper/log"
 	"github.com/skrelan/rest-restaurant/db"
 	"github.com/skrelan/rest-restaurant/models"
@@ -26,6 +28,9 @@ func GetUsers(w http.ResponseWriter, req *http.Request) {
 
 	params := req.URL.Query()
 	ids := params.Get("ids")
+	if len(ids) == 0 {
+		ids = mux.Vars(req)["id"]
+	}
 
 	limit := params.Get("limit")
 	if len(limit) == 0 {
@@ -65,11 +70,19 @@ func GetRestaurants(w http.ResponseWriter, req *http.Request) {
 	var res *[]models.Restaurant
 	var err error
 
+	memory := make([]string, 0, 0)
+	clauses := &memory // because GOlang doesn't allocate memory to an empty slice
 	var whereClause string
 
 	params := req.URL.Query()
 
-	clauses := restaurantFilters(&params)
+	id := mux.Vars(req)["id"]
+	if len(id) > 0 {
+		temp := fmt.Sprintf("r.id = %s", id)
+		*clauses = append(*clauses, temp)
+	} else {
+		clauses = restaurantFilters(&params)
+	}
 
 	limit := params.Get("limit")
 	if len(limit) == 0 {
@@ -112,9 +125,18 @@ func GetRatings(w http.ResponseWriter, req *http.Request) {
 	var err error
 	var whereClause string
 
+	memory := make([]string, 0, 0)
+	clauses := &memory // because GOlang doesn't allocate memory to an empty slice
+
 	params := req.URL.Query()
 
-	clauses := ratingFilters(&params)
+	id := mux.Vars(req)["id"]
+	if len(id) > 0 {
+		temp := fmt.Sprintf("rate.id = %s", id)
+		*clauses = append(*clauses, temp)
+	} else {
+		clauses = ratingFilters(&params)
+	}
 
 	limit := params.Get("limit")
 	if len(limit) == 0 {

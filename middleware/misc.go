@@ -21,7 +21,7 @@ func restaurantFilters(params *url.Values) *[]string {
 	}
 	city := params.Get("city")
 	if len(city) > 0 {
-		temp := fmt.Sprintf("LOWER(v.city) in LOWER('%s')", city)
+		temp := fmt.Sprintf("LOWER(v.city) = LOWER('%s')", city)
 		clauses = append(clauses, temp)
 	}
 	zipcode := params.Get("zip_code")
@@ -31,7 +31,7 @@ func restaurantFilters(params *url.Values) *[]string {
 	}
 	category := params.Get("category")
 	if len(category) > 0 {
-		temp := fmt.Sprintf("LOWER(r.category) in LOWER('%s')", category)
+		temp := fmt.Sprintf("LOWER(r.category) = LOWER('%s')", category)
 		clauses = append(clauses, temp)
 	}
 	// totalscore := params.get("totalscore")
@@ -50,14 +50,14 @@ func restaurantFilters(params *url.Values) *[]string {
 func ratingFilters(params *url.Values) *[]string {
 	clauses := make([]string, 0, 0)
 
-	user_id := params.Get("user_id")
-	if len(user_id) > 0 {
-		temp := fmt.Sprintf("u.id in (%s)", user_id)
+	userID := params.Get("user_id")
+	if len(userID) > 0 {
+		temp := fmt.Sprintf("u.id in (%s)", userID)
 		clauses = append(clauses, temp)
 	}
-	restaurant_id := params.Get("restaurant_id")
-	if len(restaurant_id) > 0 {
-		temp := fmt.Sprintf("r.id in (%s)", restaurant_id)
+	restaurantID := params.Get("restaurant_id")
+	if len(restaurantID) > 0 {
+		temp := fmt.Sprintf("r.id in (%s)", restaurantID)
 		clauses = append(clauses, temp)
 	}
 	return &clauses
