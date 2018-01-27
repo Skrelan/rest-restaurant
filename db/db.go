@@ -150,6 +150,23 @@ func GetAllRatings(limit, offset *string) (*[]models.UserRestaurantRating, error
 	return &ratings, nil
 }
 
+// GetRatingsWhere gets the reviews by restaurant/user/venue
+func GetRatingsWhere(where, limit, offset *string) (*[]models.UserRestaurantRating, error) {
+	ratings := make([]models.UserRestaurantRating, 0, 0)
+	db, err := cfg.startConnection()
+	if db == nil {
+		return nil, err
+	}
+	query := fmt.Sprintf(GETRATINGSWHERE, *where, *limit, *offset)
+	defer db.Close()
+	log.Info("running query:", query)
+	err = db.Select(&ratings, query)
+	if err != nil {
+		return nil, err
+	}
+	return &ratings, nil
+}
+
 func init() {
 	cfg.ready()
 }

@@ -108,7 +108,14 @@ func AddReview(w http.ResponseWriter, req *http.Request) {
 }
 
 func GetRatings(w http.ResponseWriter, req *http.Request) {
+	var res *[]models.UserRestaurantRating
+	var err error
+	var whereClause string
+
 	params := req.URL.Query()
+
+	clauses := ratingFilters(&params)
+
 	limit := params.Get("limit")
 	if len(limit) == 0 {
 		limit = LIMIT
@@ -117,12 +124,21 @@ func GetRatings(w http.ResponseWriter, req *http.Request) {
 	if len(offset) == 0 {
 		offset = OFFSET
 	}
-
-	res, err := db.GetAllRatings(&limit, &offset)
-	if err != nil {
-		log.Error(err)
-		json.NewEncoder(w).Encode("DB connection failed")
-		return
+	if len(*clauses) > 0 {
+		whereClause = strings.Join(*clauses, " AND ")
+		res, err = db.GetRatingsWhere(&whereClause, &limit, &offset)
+		if err != nil {
+			log.Error(err)
+			json.NewEncoder(w).Encode("DB connection failed")
+			return
+		}
+	} else {
+		res, err = db.GetAllRatings(&limit, &offset)
+		if err != nil {
+			log.Error(err)
+			json.NewEncoder(w).Encode("DB connection failed")
+			return
+		}
 	}
 	json.NewEncoder(w).Encode(res)
 }

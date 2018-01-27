@@ -46,3 +46,19 @@ func restaurantFilters(params *url.Values) *[]string {
 	}
 	return &clauses
 }
+
+func ratingFilters(params *url.Values) *[]string {
+	clauses := make([]string, 0, 0)
+
+	user_id := params.Get("user_id")
+	if len(user_id) > 0 {
+		temp := fmt.Sprintf("u.id in (%s)", user_id)
+		clauses = append(clauses, temp)
+	}
+	restaurant_id := params.Get("restaurant_id")
+	if len(restaurant_id) > 0 {
+		temp := fmt.Sprintf("r.id in (%s)", restaurant_id)
+		clauses = append(clauses, temp)
+	}
+	return &clauses
+}
