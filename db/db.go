@@ -82,6 +82,24 @@ func GetUserByIDs(ids *string) (*[]models.User, error) {
 	return &users, nil
 }
 
+// InsertIntoUsers is called to create a new user
+func InsertIntoUsers(user *models.User) error {
+	users := make([]models.User, 0, 0)
+	db, err := cfg.startConnection()
+	if db == nil {
+		return err
+	}
+	query := fmt.Sprintf(INSERTINTOUSERS, user.FirstName, user.LastName, user.Phone)
+	defer db.Close()
+	log.Info("running query:", query)
+	err = db.Select(&users, query)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // GetAllVenues get's all the restaurants
 func GetAllVenues(limit, offset *string) (*[]models.Restaurant, error) {
 	restaurants := make([]models.Restaurant, 0, 0)

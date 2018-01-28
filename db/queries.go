@@ -119,3 +119,9 @@ ORDER by "rate.date_time_updated" DESC
 LIMIT %s
 OFFSET %s
 `
+
+//INSERTINTOUSERS is the query used to create a new user
+const INSERTINTOUSERS = `
+INSERT INTO users (first_name, last_name, phone)
+VALUES ('%s', '%s', '%s')
+`

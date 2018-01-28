@@ -10,6 +10,7 @@ import (
 	"github.com/skrelan/LogrusWrapper/log"
 	"github.com/skrelan/rest-restaurant/db"
 	"github.com/skrelan/rest-restaurant/models"
+	"github.com/skrelan/rest-restaurant/utils"
 )
 
 func Health(w http.ResponseWriter, req *http.Request) {
@@ -19,7 +20,32 @@ func Health(w http.ResponseWriter, req *http.Request) {
 }
 
 func AddUser(w http.ResponseWriter, req *http.Request) {
+	var err error
+	var user models.User
 
+	err = json.NewDecoder(req.Body).Decode(&user)
+	if err != nil {
+		msg := "Invalid JSON passed"
+		log.Error(msg, err)
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	//check if user is good
+	err = utils.ValidateNewUser(&user)
+	if err != nil {
+		log.Error(err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(err.Error()))
+		return
+	}
+	err = db.InsertIntoUsers(&user)
+	if err != nil {
+		msg := "User already exsists in DB"
+		log.Error(msg, err)
+		w.WriteHeader(utils.ResponseCodes("conflict"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
 }
 
 func GetUsers(w http.ResponseWriter, req *http.Request) {
@@ -31,7 +57,6 @@ func GetUsers(w http.ResponseWriter, req *http.Request) {
 	if len(ids) == 0 {
 		ids = mux.Vars(req)["id"]
 	}
-
 	limit := params.Get("limit")
 	if len(limit) == 0 {
 		limit = LIMIT
