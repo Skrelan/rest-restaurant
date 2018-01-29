@@ -46,6 +46,7 @@ func AddUser(w http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
 		return
 	}
+	json.NewEncoder(w).Encode(*utils.GenerateMessage("new user succesfully created"))
 }
 
 func GetUsers(w http.ResponseWriter, req *http.Request) {
@@ -69,6 +70,7 @@ func GetUsers(w http.ResponseWriter, req *http.Request) {
 		res, err = db.GetUserByIDs(&ids)
 		if err != nil {
 			log.Error(err)
+			w.WriteHeader(utils.ResponseCodes("bad request"))
 			json.NewEncoder(w).Encode("DB connection failed")
 			return
 		}
@@ -88,6 +90,34 @@ func UpdateUser(w http.ResponseWriter, req *http.Request) {
 }
 
 func AddRestaurant(w http.ResponseWriter, req *http.Request) {
+	var err error
+	var restaurant models.Restaurant
+
+	err = json.NewDecoder(req.Body).Decode(&restaurant)
+	if err != nil {
+		msg := "Invalid JSON passed"
+		log.Error(msg, err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	//check if restaurant data is good
+	err = utils.ValidateNewRestaurant(&restaurant)
+	if err != nil {
+		log.Error(err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(err.Error()))
+		return
+	}
+	err = db.InsertIntoVenues(&restaurant)
+	if err != nil {
+		msg := "User already exsists in DB"
+		log.Error(msg, err)
+		w.WriteHeader(utils.ResponseCodes("conflict"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	json.NewEncoder(w).Encode(*utils.GenerateMessage("new restaurant succesfully created"))
 
 }
 

@@ -43,7 +43,7 @@ INNER JOIN restaurants as r
 ON r.id = v.restaurant_id
 WHERE v.id IN (%s)`
 
-// GETVENUESBYIDS is the Query to get Venue(s) by id(s)
+// GETVENUESWHERE is the Query to get Venue(s) WHERE
 const GETVENUESWHERE string = `
 SELECT
   r.id as id,
@@ -125,3 +125,16 @@ const INSERTINTOUSERS = `
 INSERT INTO users (first_name, last_name, phone)
 VALUES ('%s', '%s', '%s')
 `
+
+// INSERTINTORESTAURANTS inserts new restaurant info into the restaurant table
+const INSERTINTORESTAURANTS = `
+INSERT INTO restaurants (name, category)
+VALUES ('%s', '%s')
+ON CONFLICT DO NOTHING`
+
+// INSERTINTOVENUES inserts new venue info into the venues table
+const INSERTINTOVENUES = `
+INSERT INTO venues (street_address, city, state, zip_code, restaurant_id)
+VALUES ('%s','%s','%s','%s',
+  (SELECT id FROM restaurants as r
+    WHERE r.name = '%s' AND r.category = '%s'))`

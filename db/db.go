@@ -84,7 +84,6 @@ func GetUserByIDs(ids *string) (*[]models.User, error) {
 
 // InsertIntoUsers is called to create a new user
 func InsertIntoUsers(user *models.User) error {
-	users := make([]models.User, 0, 0)
 	db, err := cfg.startConnection()
 	if db == nil {
 		return err
@@ -92,7 +91,7 @@ func InsertIntoUsers(user *models.User) error {
 	query := fmt.Sprintf(INSERTINTOUSERS, user.FirstName, user.LastName, user.Phone)
 	defer db.Close()
 	log.Info("running query:", query)
-	err = db.Select(&users, query)
+	_, err = db.Query(query)
 	if err != nil {
 		return err
 	}
@@ -115,6 +114,36 @@ func GetAllVenues(limit, offset *string) (*[]models.Restaurant, error) {
 		return nil, err
 	}
 	return &restaurants, nil
+}
+
+// InsertIntoVenues is called to create a new user
+func InsertIntoVenues(restaurant *models.Restaurant) error {
+	db, err := cfg.startConnection()
+	if db == nil {
+		return err
+	}
+	query := fmt.Sprintf(INSERTINTORESTAURANTS, restaurant.Name, restaurant.Category)
+	defer db.Close()
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		return err
+	}
+	query = fmt.Sprintf(INSERTINTOVENUES,
+		restaurant.Venue.StreetAddress,
+		restaurant.Venue.City,
+		restaurant.Venue.State,
+		restaurant.Venue.ZipCode,
+		restaurant.Name,
+		restaurant.Category)
+	defer db.Close()
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // GetVenuesByIDs gets venue(s) by id(s)
