@@ -5,12 +5,12 @@ user_post = {
 }
 
 restaurants_post = {
-    "name" : "Tomato",
-    "category" : "Jerry",
+    "name" : "Sweet Tomato",
+    "category" : "Buffet",
     "venue":{
       "city" : "San Mateo",
       "state" : "CA",
-      "street_address" : "rewardStyle",
+      "street_address" : "1234 Abc st.",
       "zip_code" : "94123"
     }
   }
