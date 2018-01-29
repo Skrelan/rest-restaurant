@@ -49,6 +49,14 @@ func ResponseCodes(meaning string) int {
 	return responseCodes[meaning]
 }
 
+func inRange(i, min, max int) bool {
+	if (i >= min) && (i <= max) {
+		return true
+	} else {
+		return false
+	}
+}
+
 func ValidateNewUser(user *models.User) error {
 	if len(user.FirstName) == 0 {
 		return fmt.Errorf("Invalid value for first_name")
@@ -72,7 +80,7 @@ func ValidateNewRestaurant(restaurant *models.Restaurant) error {
 	if len(restaurant.Venue.City) == 0 {
 		return fmt.Errorf("Invalid value for city")
 	}
-	if (len(restaurant.Venue.State) == 0) || (len(restaurant.Venue.State) > 3) {
+	if !inRange(len(restaurant.Venue.State), 0, 3) {
 		return fmt.Errorf("Invalid value for state. Must be b/w 0 or 3 characters")
 	}
 	if len(restaurant.Venue.StreetAddress) == 0 {
@@ -80,6 +88,29 @@ func ValidateNewRestaurant(restaurant *models.Restaurant) error {
 	}
 	if len(restaurant.Venue.ZipCode) != 5 {
 		return fmt.Errorf("Invalid value for zip_code. Must be 5 digits")
+	}
+	return nil
+}
+
+func ValidateNewRating(rating *models.Rating) error {
+	if !inRange(int(rating.Cost), 1, 5) {
+		return fmt.Errorf("Invalid value for cost. Must be int b/w 1 to 5")
+	}
+	if !inRange(int(rating.Food), 1, 5) {
+		return fmt.Errorf("Invalid value for food. Must be int b/w 1 to 5")
+	}
+	if !inRange(int(rating.CleanlinessService), 1, 5) {
+		return fmt.Errorf("Invalid value for cleanliness_service. Must be int b/w 1 to 5")
+	}
+	if rating.UserID <= 0 {
+		return fmt.Errorf("Invalid value for user_id")
+	}
+	if rating.RestaurantID <= 0 {
+		return fmt.Errorf("Invalid value for restaurant_id")
+	}
+	rating.TotalScore = float64((rating.Cost + rating.Food + rating.CleanlinessService)) / 3.0
+	if (rating.TotalScore < 2) && (len(rating.Comments) == 0) {
+		return fmt.Errorf("average rating is 1 and comments field is empty")
 	}
 	return nil
 }

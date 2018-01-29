@@ -111,7 +111,7 @@ func AddRestaurant(w http.ResponseWriter, req *http.Request) {
 	}
 	err = db.InsertIntoVenues(&restaurant)
 	if err != nil {
-		msg := "User already exsists in DB"
+		msg := "Restaurant venue already exsists in DB"
 		log.Error(msg, err)
 		w.WriteHeader(utils.ResponseCodes("conflict"))
 		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
@@ -171,7 +171,36 @@ func UpdateRestaurant(w http.ResponseWriter, req *http.Request) {
 
 }
 
-func AddReview(w http.ResponseWriter, req *http.Request) {
+func AddRating(w http.ResponseWriter, req *http.Request) {
+
+	var err error
+	var rating models.Rating
+
+	err = json.NewDecoder(req.Body).Decode(&rating)
+	if err != nil {
+		msg := "Invalid JSON passed"
+		log.Error(msg, err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	log.Info(rating)
+	//check if restaurant data is good
+	err = utils.ValidateNewRating(&rating)
+	if err != nil {
+		log.Error(err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(err.Error()))
+		return
+	}
+	msg, err := db.InsertIntoRatings(&rating)
+	if err != nil {
+		log.Error(msg, err)
+		w.WriteHeader(utils.ResponseCodes("conflict"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	json.NewEncoder(w).Encode(*utils.GenerateMessage("new restaurant succesfully created"))
 
 }
 

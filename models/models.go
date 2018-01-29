@@ -31,7 +31,6 @@ type Rating struct {
 	CleanlinessService int64   `json:"cleanliness_service,omitempty" db:"cleanliness_service"`
 	TotalScore         float64 `json:"total_score,omitempty" db:"total_score"`
 	RestaurantID       int64   `json:"restaurant_id,omitempty" db:"restaurant_id"`
-	VenueID            int64   `json:"venue_id,omitempty" db:"venue_id"`
 	UserID             int64   `json:"user_id,omitempty" db:"user_id"`
 	Comments           string  `json:"comments,omitempty" db:"comments"`
 	DateCreated        string  `json:"date_time_created,omitempty" db:"date_time_created"`

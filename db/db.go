@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"time"
 
 	sql "github.com/jmoiron/sqlx"
 
@@ -216,4 +217,51 @@ func GetRatingsWhere(where, limit, offset *string) (*[]models.UserRestaurantRati
 
 func init() {
 	cfg.ready()
+}
+
+// InsertIntoRatings inserts a new rating
+func InsertIntoRatings(rating *models.Rating) (string, error) {
+	type count struct {
+		Count int `db:"count"`
+	}
+	var check count
+	db, err := cfg.startConnection()
+	if db == nil {
+		return "", err
+	}
+
+	query := fmt.Sprintf(CHECKUSERRATINGS,
+		rating.UserID,
+		rating.RestaurantID,
+		time.Now().AddDate(0, 0, -30).UTC().Format("2006-01-02 15:04:05"))
+	defer db.Close()
+	log.Info("running query:", query)
+	err = db.Get(&check, query)
+	if err != nil {
+		return "DB connection issue", err
+	}
+	log.Info(check)
+	if check.Count > 0 {
+		msg := "user has given a review to a venue of the restaurant in the past 30 days"
+		return msg, fmt.Errorf("30 day constraint conflict")
+	}
+	query = fmt.Sprintf(INSERTINTORATINGS,
+		rating.Cost,
+		rating.Food,
+		rating.CleanlinessService,
+		rating.TotalScore,
+		rating.RestaurantID,
+		rating.UserID,
+		rating.Comments,
+		time.Now().UTC().Format("2006-01-02 15:04:05"), //GO Timeformat is defined as this
+		time.Now().UTC().Format("2006-01-02 15:04:05"))
+	defer db.Close()
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		msg := "User has already given a rating to this venue of the restaurant"
+		return msg, err
+	}
+
+	return "", nil
 }

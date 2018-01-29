@@ -19,7 +19,7 @@ func endpoints(router *mux.Router) {
 	router.HandleFunc("/v1/restaurants", middleware.AddRestaurant).Methods("POST")
 	router.HandleFunc("/v1/restaurants", middleware.UpdateRestaurant).Methods("PUT")
 	router.HandleFunc("/v1/ratings", middleware.GetRatings).Methods("GET")
-	router.HandleFunc("/v1/ratings", middleware.AddReview).Methods("POST")
+	router.HandleFunc("/v1/ratings", middleware.AddRating).Methods("POST")
 	router.HandleFunc("/v1/ratings", middleware.UpdateReviews).Methods("PUT")
 	router.HandleFunc("/v1/users/{id}", middleware.GetUsers).Methods("GET")
 	router.HandleFunc("/v1/users/{id}", middleware.UpdateUser).Methods("PUT")
