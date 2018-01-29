@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"time"
 
 	sql "github.com/jmoiron/sqlx"
 
@@ -82,6 +83,23 @@ func GetUserByIDs(ids *string) (*[]models.User, error) {
 	return &users, nil
 }
 
+// InsertIntoUsers is called to create a new user
+func InsertIntoUsers(user *models.User) error {
+	db, err := cfg.startConnection()
+	if db == nil {
+		return err
+	}
+	query := fmt.Sprintf(INSERTINTOUSERS, user.FirstName, user.LastName, user.Phone)
+	defer db.Close()
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // GetAllVenues get's all the restaurants
 func GetAllVenues(limit, offset *string) (*[]models.Restaurant, error) {
 	restaurants := make([]models.Restaurant, 0, 0)
@@ -97,6 +115,36 @@ func GetAllVenues(limit, offset *string) (*[]models.Restaurant, error) {
 		return nil, err
 	}
 	return &restaurants, nil
+}
+
+// InsertIntoVenues is called to create a new user
+func InsertIntoVenues(restaurant *models.Restaurant) error {
+	db, err := cfg.startConnection()
+	if db == nil {
+		return err
+	}
+	query := fmt.Sprintf(INSERTINTORESTAURANTS, restaurant.Name, restaurant.Category)
+	defer db.Close()
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		return err
+	}
+	query = fmt.Sprintf(INSERTINTOVENUES,
+		restaurant.Venue.StreetAddress,
+		restaurant.Venue.City,
+		restaurant.Venue.State,
+		restaurant.Venue.ZipCode,
+		restaurant.Name,
+		restaurant.Category)
+	defer db.Close()
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // GetVenuesByIDs gets venue(s) by id(s)
@@ -169,4 +217,51 @@ func GetRatingsWhere(where, limit, offset *string) (*[]models.UserRestaurantRati
 
 func init() {
 	cfg.ready()
+}
+
+// InsertIntoRatings inserts a new rating
+func InsertIntoRatings(rating *models.Rating) (string, error) {
+	type count struct {
+		Count int `db:"count"`
+	}
+	var check count
+	db, err := cfg.startConnection()
+	if db == nil {
+		return "", err
+	}
+
+	query := fmt.Sprintf(CHECKUSERRATINGS,
+		rating.UserID,
+		rating.RestaurantID,
+		time.Now().AddDate(0, 0, -30).UTC().Format("2006-01-02 15:04:05"))
+	defer db.Close()
+	log.Info("running query:", query)
+	err = db.Get(&check, query)
+	if err != nil {
+		return "DB connection issue", err
+	}
+	log.Info(check)
+	if check.Count > 0 {
+		msg := "user has given a review to a venue of the restaurant in the past 30 days"
+		return msg, fmt.Errorf("30 day constraint conflict")
+	}
+	query = fmt.Sprintf(INSERTINTORATINGS,
+		rating.Cost,
+		rating.Food,
+		rating.CleanlinessService,
+		rating.TotalScore,
+		rating.RestaurantID,
+		rating.UserID,
+		rating.Comments,
+		time.Now().UTC().Format("2006-01-02 15:04:05"), //GO Timeformat is defined as this
+		time.Now().UTC().Format("2006-01-02 15:04:05"))
+	defer db.Close()
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		msg := "User has already given a rating to this venue of the restaurant"
+		return msg, err
+	}
+
+	return "", nil
 }

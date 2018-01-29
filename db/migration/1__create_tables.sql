@@ -41,8 +41,8 @@ CREATE TABLE ratings (
   venue_id int NOT NULL,
   user_id int NOT NULL,
 	comments VARCHAR(400),
-  date_time_created TIMESTAMP,
-  date_time_updated TIMESTAMP,
+  date_time_created TIMESTAMP WITHOUT time zone default (now() at time zone 'utc'),
+  date_time_updated TIMESTAMP WITHOUT time zone default (now() at time zone 'utc'),
   constraint fk__rating__venues
    foreign key (venue_id)
    REFERENCES venues (id),
