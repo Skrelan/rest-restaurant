@@ -1,0 +1,25 @@
+user_post = {
+  "first_name" : "Tom",
+  "last_name" : "Jerry",
+  "phone" : "4118717325"
+}
+
+restaurants_post = {
+    "name" : "Tomato",
+    "category" : "Jerry",
+    "venue":{
+      "city" : "San Mateo",
+      "state" : "CA",
+      "street_address" : "rewardStyle",
+      "zip_code" : "94123"
+    }
+  }
+
+ratings_post = {
+  "cost" : 1,
+  "food" : 2,
+  "cleanliness_service" : 4,
+  "restaurant_id" : 3,
+  "user_id" : 3,
+  "comments" : "A post hangover miracle!"
+}
