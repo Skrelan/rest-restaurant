@@ -40,3 +40,10 @@ restraunt_put = {
     "zip_code" : "94123"
   }
 }
+
+ratings_put = {
+	"cost": 2,
+	"food": 1,
+	"cleanliness_service": 5,
+	"total_score": 3
+}

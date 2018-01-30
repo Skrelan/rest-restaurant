@@ -59,9 +59,9 @@ func GetAllUsers(limit, offset *string) (*[]models.User, error) {
 		return nil, err
 	}
 	query := fmt.Sprintf(GETALLUSERS, *limit, *offset)
-	defer db.Close()
 	log.Info("running query:", query)
 	err = db.Select(&users, query)
+	defer db.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -77,9 +77,9 @@ func GetUserByIDs(ids *string) (*[]models.User, error) {
 		return nil, err
 	}
 	query := fmt.Sprintf(GETUSERBYIDS, *ids)
-	defer db.Close()
 	log.Info("running query:", query)
 	err = db.Select(&users, query)
+	defer db.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -94,9 +94,9 @@ func InsertIntoUsers(user *models.User) error {
 		return err
 	}
 	query := fmt.Sprintf(INSERTINTOUSERS, user.FirstName, user.LastName, user.Phone)
-	defer db.Close()
 	log.Info("running query:", query)
 	_, err = db.Query(query)
+	defer db.Close()
 	if err != nil {
 		return err
 	}
@@ -139,9 +139,9 @@ func GetAllVenues(limit, offset *string) (*[]models.Restaurant, error) {
 		return nil, err
 	}
 	query := fmt.Sprintf(GETALLVENUES, *limit, *offset)
-	defer db.Close()
 	log.Info("running query:", query)
 	err = db.Select(&restaurants, query)
+	defer db.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -155,9 +155,9 @@ func InsertIntoVenues(restaurant *models.Restaurant) error {
 		return err
 	}
 	query := fmt.Sprintf(INSERTINTORESTAURANTS, restaurant.Name, restaurant.Category)
-	defer db.Close()
 	log.Info("running query:", query)
 	_, err = db.Query(query)
+	defer db.Close()
 	if err != nil {
 		return err
 	}
@@ -168,7 +168,6 @@ func InsertIntoVenues(restaurant *models.Restaurant) error {
 		restaurant.Venue.ZipCode,
 		restaurant.Name,
 		restaurant.Category)
-	defer db.Close()
 	log.Info("running query:", query)
 	_, err = db.Query(query)
 	if err != nil {
@@ -186,9 +185,9 @@ func GetVenuesByIDs(ids *string) (*[]models.Restaurant, error) {
 		return nil, err
 	}
 	query := fmt.Sprintf(GETVENUESBYIDS, *ids)
-	defer db.Close()
 	log.Info("running query:", query)
 	err = db.Select(&restaurants, query)
+	defer db.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -203,9 +202,9 @@ func GetVenuesWhere(where, limit, offset *string) (*[]models.Restaurant, error) 
 		return nil, err
 	}
 	query := fmt.Sprintf(GETVENUESWHERE, *where, *limit, *offset)
-	defer db.Close()
 	log.Info("running query:", query)
 	err = db.Select(&restaurants, query)
+	defer db.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -266,9 +265,9 @@ func UpdateRestaurant(restaurant *models.Restaurant) error {
 		return err
 	}
 	query := fmt.Sprintf(UPDATERESTAURANT, restaurant.Name, restaurant.Category, restaurant.ID)
-	defer db.Close()
 	log.Info("running query:", query)
 	_, err = db.Query(query)
+	defer db.Close()
 	if err != nil {
 		return err
 	}
@@ -284,9 +283,9 @@ func GetAllRatings(limit, offset *string) (*[]models.UserRestaurantRating, error
 		return nil, err
 	}
 	query := fmt.Sprintf(GETALLRATINGS, *limit, *offset)
-	defer db.Close()
 	log.Info("running query:", query)
 	err = db.Select(&ratings, query)
+	defer db.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -301,17 +300,13 @@ func GetRatingsWhere(where, limit, offset *string) (*[]models.UserRestaurantRati
 		return nil, err
 	}
 	query := fmt.Sprintf(GETRATINGSWHERE, *where, *limit, *offset)
-	defer db.Close()
 	log.Info("running query:", query)
 	err = db.Select(&ratings, query)
+	defer db.Close()
 	if err != nil {
 		return nil, err
 	}
 	return &ratings, nil
-}
-
-func init() {
-	cfg.ready()
 }
 
 // InsertIntoRatings inserts a new rating
@@ -326,9 +321,9 @@ func InsertIntoRatings(rating *models.Rating) (string, error) {
 		rating.UserID,
 		rating.RestaurantID,
 		time.Now().AddDate(0, 0, -30).UTC().Format("2006-01-02 15:04:05"))
-	defer db.Close()
 	log.Info("running query:", query)
 	err = db.Get(&check, query)
+	defer db.Close()
 	if err != nil {
 		return "DB connection issue", err
 	}
@@ -347,7 +342,6 @@ func InsertIntoRatings(rating *models.Rating) (string, error) {
 		rating.Comments,
 		time.Now().UTC().Format("2006-01-02 15:04:05"), //GO Timeformat is defined as this
 		time.Now().UTC().Format("2006-01-02 15:04:05"))
-	defer db.Close()
 	log.Info("running query:", query)
 	_, err = db.Query(query)
 	if err != nil {
@@ -393,4 +387,8 @@ func UpdateRating(rating *models.Rating) error {
 	}
 
 	return nil
+}
+
+func init() {
+	cfg.ready()
 }

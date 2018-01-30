@@ -210,6 +210,7 @@ SET
 )
 WHERE id = %d`
 
+// UPDATERATING updates the rating
 const UPDATERATING = `
 UPDATE ratings
 SET
@@ -223,21 +224,25 @@ WHERE
   id = %d
 `
 
+// CHECKUSER is a check to see if user id is valid
 const CHECKUSER = `
 SELECT count(id) as count
 FROM users
 WHERE id = %d`
 
+// CHECKVENUE is a check to see if venue id is valid
 const CHECKVENUE = `
 SELECT count(id) as count
 FROM venues
 WHERE id = %d`
 
+// CHECKRESTAURANT is a check to see if restaurant id is valid
 const CHECKRESTAURANT = `
 SELECT count(id) as count
 FROM restaurants
 WHERE id = %d`
 
+// CHECKRATING is a check to see if rating id is valid
 const CHECKRATING = `
 SELECT count(id) as count
 FROM ratings

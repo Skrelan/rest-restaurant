@@ -91,18 +91,7 @@ func UpdateUser(w http.ResponseWriter, req *http.Request) {
 	var err error
 
 	params := req.URL.Query()
-	id := params.Get("id")
-	if len(id) == 0 {
-		id = mux.Vars(req)["id"]
-	}
-	if len(id) == 0 {
-		// through error
-		msg := "Missing user id"
-		w.WriteHeader(utils.ResponseCodes("bad request"))
-		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
-		return
-	}
-	user.ID, err = strconv.ParseInt(id, 10, 64)
+
 	if err != nil {
 		msg := "Invalid user id"
 		w.WriteHeader(utils.ResponseCodes("bad request"))
@@ -116,6 +105,19 @@ func UpdateUser(w http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
 		return
 	}
+
+	id := params.Get("id")
+	if len(id) == 0 {
+		id = mux.Vars(req)["id"]
+	}
+	if len(id) == 0 {
+		// through error
+		msg := "Missing user id"
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	user.ID, err = strconv.ParseInt(id, 10, 64)
 	//check if user is good
 	err = utils.ValidateNewUser(&user)
 	if err != nil {
@@ -226,6 +228,15 @@ func UpdateRestaurant(w http.ResponseWriter, req *http.Request) {
 		updateParent = true
 	}
 
+	err = json.NewDecoder(req.Body).Decode(&restaurant)
+	if err != nil {
+		msg := "Invalid JSON passed"
+		log.Error(msg, err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+
 	id := params.Get("id")
 	if len(id) == 0 {
 		id = mux.Vars(req)["id"]
@@ -243,14 +254,7 @@ func UpdateRestaurant(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(utils.ResponseCodes("bad request"))
 		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
 	}
-	err = json.NewDecoder(req.Body).Decode(&restaurant)
-	if err != nil {
-		msg := "Invalid JSON passed"
-		log.Error(msg, err)
-		w.WriteHeader(utils.ResponseCodes("bad request"))
-		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
-		return
-	}
+
 	//check if user is good
 	err = utils.ValidateNewRestaurant(&restaurant)
 	if err != nil {
@@ -354,6 +358,15 @@ func UpdateRating(w http.ResponseWriter, req *http.Request) {
 
 	params := req.URL.Query()
 
+	err = json.NewDecoder(req.Body).Decode(&rating)
+	if err != nil {
+		msg := "Invalid JSON passed"
+		log.Error(msg, err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+
 	id := params.Get("id")
 	if len(id) == 0 {
 		id = mux.Vars(req)["id"]
@@ -371,14 +384,7 @@ func UpdateRating(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(utils.ResponseCodes("bad request"))
 		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
 	}
-	err = json.NewDecoder(req.Body).Decode(&rating)
-	if err != nil {
-		msg := "Invalid JSON passed"
-		log.Error(msg, err)
-		w.WriteHeader(utils.ResponseCodes("bad request"))
-		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
-		return
-	}
+
 	//check if user is good
 	err = utils.ValidateNewRating(&rating, true)
 	if err != nil {
