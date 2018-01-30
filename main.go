@@ -20,13 +20,13 @@ func endpoints(router *mux.Router) {
 	router.HandleFunc("/v1/restaurants", middleware.UpdateRestaurant).Methods("PUT")
 	router.HandleFunc("/v1/ratings", middleware.GetRatings).Methods("GET")
 	router.HandleFunc("/v1/ratings", middleware.AddRating).Methods("POST")
-	router.HandleFunc("/v1/ratings", middleware.UpdateReviews).Methods("PUT")
+	router.HandleFunc("/v1/ratings", middleware.UpdateRating).Methods("PUT")
 	router.HandleFunc("/v1/users/{id}", middleware.GetUsers).Methods("GET")
 	router.HandleFunc("/v1/users/{id}", middleware.UpdateUser).Methods("PUT")
 	router.HandleFunc("/v1/restaurants/{id}", middleware.GetRestaurants).Methods("GET")
 	router.HandleFunc("/v1/restaurants/{id}", middleware.UpdateRestaurant).Methods("PUT")
 	router.HandleFunc("/v1/ratings/{id}", middleware.GetRatings).Methods("GET")
-	router.HandleFunc("/v1/ratings/{id}", middleware.UpdateReviews).Methods("PUT")
+	router.HandleFunc("/v1/ratings/{id}", middleware.UpdateRating).Methods("PUT")
 }
 
 func main() {

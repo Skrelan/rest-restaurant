@@ -285,7 +285,7 @@ func AddRating(w http.ResponseWriter, req *http.Request) {
 	}
 	log.Info(rating)
 	//check if restaurant data is good
-	err = utils.ValidateNewRating(&rating)
+	err = utils.ValidateNewRating(&rating, false)
 	if err != nil {
 		log.Error(err)
 		w.WriteHeader(utils.ResponseCodes("bad request"))
@@ -348,7 +348,53 @@ func GetRatings(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(res)
 }
 
-func UpdateReviews(w http.ResponseWriter, req *http.Request) {
+func UpdateRating(w http.ResponseWriter, req *http.Request) {
+	var rating models.Rating
+	var err error
+
+	params := req.URL.Query()
+
+	id := params.Get("id")
+	if len(id) == 0 {
+		id = mux.Vars(req)["id"]
+	}
+	if len(id) == 0 {
+		// through error
+		msg := "Missing restaurant venue id"
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	rating.ID, err = strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		msg := "Invalid restaurant id"
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+	}
+	err = json.NewDecoder(req.Body).Decode(&rating)
+	if err != nil {
+		msg := "Invalid JSON passed"
+		log.Error(msg, err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	//check if user is good
+	err = utils.ValidateNewRating(&rating, true)
+	if err != nil {
+		log.Error(err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(err.Error()))
+		return
+	}
+	err = db.UpdateRating(&rating)
+	if err != nil {
+		log.Error(err)
+		w.WriteHeader(utils.ResponseCodes("conflict"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(err.Error()))
+		return
+	}
+	json.NewEncoder(w).Encode(*utils.GenerateMessage("rating succesfully updated"))
 
 }
 

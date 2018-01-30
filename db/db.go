@@ -356,3 +356,41 @@ func InsertIntoRatings(rating *models.Rating) (string, error) {
 	}
 	return "", nil
 }
+
+// UpdateRating is the function that is called to update a rating
+func UpdateRating(rating *models.Rating) error {
+	var check count
+	var query string
+	db, err := cfg.startConnection()
+	if db == nil {
+		return err
+	}
+
+	query = fmt.Sprintf(CHECKRATING, rating.ID)
+	log.Info("running query:", query)
+	err = db.Get(&check, query)
+	defer db.Close()
+	if err != nil {
+		return err
+	}
+	if check.Count < 1 {
+		return fmt.Errorf("requested ID does not exsist")
+	}
+
+	query = fmt.Sprintf(UPDATERATING,
+		rating.Cost,
+		rating.Food,
+		rating.CleanlinessService,
+		rating.TotalScore,
+		rating.Comments,
+		time.Now().UTC().Format("2006-01-02 15:04:05"),
+		rating.ID)
+
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

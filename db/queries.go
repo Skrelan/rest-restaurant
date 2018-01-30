@@ -70,6 +70,7 @@ SELECT
   v.street_address as "r.a.street_address",
   v.city as "r.a.city",
   v.state as "r.a.state",
+  rate.id as "rate.id",
   rate.cost as "rate.cost",
   rate.food as "rate.food",
   rate.cleanliness_service as "rate.cleanliness_service",
@@ -100,6 +101,7 @@ SELECT
   v.street_address as "r.a.street_address",
   v.city as "r.a.city",
   v.state as "r.a.state",
+  rate.id as "rate.id",
   rate.cost as "rate.cost",
   rate.food as "rate.food",
   rate.cleanliness_service as "rate.cleanliness_service",
@@ -207,6 +209,19 @@ SET
   AND category = '%s'
 )
 WHERE id = %d`
+
+const UPDATERATING = `
+UPDATE ratings
+SET
+ cost = %d,
+ food = %d,
+ cleanliness_service = %d,
+ total_score = %f,
+ comments = '%s',
+ date_time_updated = '%s'
+WHERE
+  id = %d
+`
 
 const CHECKUSER = `
 SELECT count(id) as count

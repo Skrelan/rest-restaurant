@@ -92,7 +92,7 @@ func ValidateNewRestaurant(restaurant *models.Restaurant) error {
 	return nil
 }
 
-func ValidateNewRating(rating *models.Rating) error {
+func ValidateNewRating(rating *models.Rating, update bool) error {
 	if !inRange(int(rating.Cost), 1, 5) {
 		return fmt.Errorf("Invalid value for cost. Must be int b/w 1 to 5")
 	}
@@ -102,10 +102,10 @@ func ValidateNewRating(rating *models.Rating) error {
 	if !inRange(int(rating.CleanlinessService), 1, 5) {
 		return fmt.Errorf("Invalid value for cleanliness_service. Must be int b/w 1 to 5")
 	}
-	if rating.UserID <= 0 {
+	if (rating.UserID <= 0) && !update {
 		return fmt.Errorf("Invalid value for user_id")
 	}
-	if rating.RestaurantID <= 0 {
+	if (rating.RestaurantID <= 0) && !update {
 		return fmt.Errorf("Invalid value for restaurant_id")
 	}
 	rating.TotalScore = float64((rating.Cost + rating.Food + rating.CleanlinessService)) / 3.0
