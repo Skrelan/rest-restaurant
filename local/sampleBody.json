@@ -5,12 +5,12 @@ user_post = {
 }
 
 restaurants_post = {
-    "name" : "Tomato",
-    "category" : "Jerry",
+    "name" : "Sweet Tomato",
+    "category" : "Buffet",
     "venue":{
       "city" : "San Mateo",
       "state" : "CA",
-      "street_address" : "rewardStyle",
+      "street_address" : "1234 Abc st.",
       "zip_code" : "94123"
     }
   }
@@ -22,4 +22,28 @@ ratings_post = {
   "restaurant_id" : 3,
   "user_id" : 3,
   "comments" : "A post hangover miracle!"
+}
+
+user_put = {
+  "first_name" : "Goodman",
+  "last_name" : "Dracula",
+  "phone" : "1234567891"
+}
+
+restraunt_put = {
+  "name" : "DOSA",
+  "category" : "Indian",
+  "venue":{
+    "city" : "San Mateo",
+    "state" : "CA",
+    "street_address" : "4561 Abc st.",
+    "zip_code" : "94123"
+  }
+}
+
+ratings_put = {
+	"cost": 2,
+	"food": 1,
+	"cleanliness_service": 5,
+	"total_score": 3
 }

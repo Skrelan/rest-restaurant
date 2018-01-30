@@ -26,6 +26,7 @@ type Restaurant struct {
 
 // Rating is the structure for the Ratings data
 type Rating struct {
+	ID                 int64   `json:"id,omitempty" db:"id"`
 	Cost               int64   `json:"cost,omitempty" db:"cost"`
 	Food               int64   `json:"food,omitempty" db:"food"`
 	CleanlinessService int64   `json:"cleanliness_service,omitempty" db:"cleanliness_service"`

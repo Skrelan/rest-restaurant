@@ -70,6 +70,7 @@ SELECT
   v.street_address as "r.a.street_address",
   v.city as "r.a.city",
   v.state as "r.a.state",
+  rate.id as "rate.id",
   rate.cost as "rate.cost",
   rate.food as "rate.food",
   rate.cleanliness_service as "rate.cleanliness_service",
@@ -100,6 +101,7 @@ SELECT
   v.street_address as "r.a.street_address",
   v.city as "r.a.city",
   v.state as "r.a.state",
+  rate.id as "rate.id",
   rate.cost as "rate.cost",
   rate.food as "rate.food",
   rate.cleanliness_service as "rate.cleanliness_service",
@@ -166,3 +168,82 @@ INSERT INTO ratings
  date_time_updated)
 VALUES
 ( %d, %d, %d, %f, %d, %d, '%s', '%s', '%s')`
+
+// UPDATEUSER updates a users info
+const UPDATEUSER = `
+UPDATE users
+SET
+  first_name = '%s',
+  last_name = '%s',
+  phone = '%s'
+WHERE
+ users.id = %d;`
+
+//UPDATERESTAURANT updates parent restraunt information
+const UPDATERESTAURANT = `
+UPDATE restaurants
+  SET
+    name = '%s',
+    category = '%s'
+  WHERE
+    id = (
+      SELECT r.id
+      FROM restaurants AS r
+      INNER JOIN venues AS v
+      ON v.restaurant_id = r.id
+      WHERE v.id = '%d'
+    )
+`
+
+// UPDATEVENUE updates a restraunt
+const UPDATEVENUE = `
+UPDATE venues
+SET
+  street_address = '%s',
+  city = '%s',
+  state = '%s',
+  zip_code = '%s',
+  restaurant_id = ( SELECT id
+  FROM restaurants
+  WHERE name = '%s'
+  AND category = '%s'
+)
+WHERE id = %d`
+
+// UPDATERATING updates the rating
+const UPDATERATING = `
+UPDATE ratings
+SET
+ cost = %d,
+ food = %d,
+ cleanliness_service = %d,
+ total_score = %f,
+ comments = '%s',
+ date_time_updated = '%s'
+WHERE
+  id = %d
+`
+
+// CHECKUSER is a check to see if user id is valid
+const CHECKUSER = `
+SELECT count(id) as count
+FROM users
+WHERE id = %d`
+
+// CHECKVENUE is a check to see if venue id is valid
+const CHECKVENUE = `
+SELECT count(id) as count
+FROM venues
+WHERE id = %d`
+
+// CHECKRESTAURANT is a check to see if restaurant id is valid
+const CHECKRESTAURANT = `
+SELECT count(id) as count
+FROM restaurants
+WHERE id = %d`
+
+// CHECKRATING is a check to see if rating id is valid
+const CHECKRATING = `
+SELECT count(id) as count
+FROM ratings
+WHERE id = %d`
