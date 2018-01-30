@@ -166,3 +166,64 @@ INSERT INTO ratings
  date_time_updated)
 VALUES
 ( %d, %d, %d, %f, %d, %d, '%s', '%s', '%s')`
+
+// UPDATEUSER updates a users info
+const UPDATEUSER = `
+UPDATE users
+SET
+  first_name = '%s',
+  last_name = '%s',
+  phone = '%s'
+WHERE
+ users.id = %d;`
+
+//UPDATERESTAURANT updates parent restraunt information
+const UPDATERESTAURANT = `
+UPDATE restaurants
+  SET
+    name = '%s',
+    category = '%s'
+  WHERE
+    id = (
+      SELECT r.id
+      FROM restaurants AS r
+      INNER JOIN venues AS v
+      ON v.restaurant_id = r.id
+      WHERE v.id = '%d'
+    )
+`
+
+// UPDATEVENUE updates a restraunt
+const UPDATEVENUE = `
+UPDATE venues
+SET
+  street_address = '%s',
+  city = '%s',
+  state = '%s',
+  zip_code = '%s',
+  restaurant_id = ( SELECT id
+  FROM restaurants
+  WHERE name = '%s'
+  AND category = '%s'
+)
+WHERE id = %d`
+
+const CHECKUSER = `
+SELECT count(id) as count
+FROM users
+WHERE id = %d`
+
+const CHECKVENUE = `
+SELECT count(id) as count
+FROM venues
+WHERE id = %d`
+
+const CHECKRESTAURANT = `
+SELECT count(id) as count
+FROM restaurants
+WHERE id = %d`
+
+const CHECKRATING = `
+SELECT count(id) as count
+FROM ratings
+WHERE id = %d`

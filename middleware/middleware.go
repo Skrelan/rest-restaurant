@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -86,6 +87,51 @@ func GetUsers(w http.ResponseWriter, req *http.Request) {
 }
 
 func UpdateUser(w http.ResponseWriter, req *http.Request) {
+	var user models.User
+	var err error
+
+	params := req.URL.Query()
+	id := params.Get("id")
+	if len(id) == 0 {
+		id = mux.Vars(req)["id"]
+	}
+	if len(id) == 0 {
+		// through error
+		msg := "Missing user id"
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	user.ID, err = strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		msg := "Invalid user id"
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+	}
+	err = json.NewDecoder(req.Body).Decode(&user)
+	if err != nil {
+		msg := "Invalid JSON passed"
+		log.Error(msg, err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	//check if user is good
+	err = utils.ValidateNewUser(&user)
+	if err != nil {
+		log.Error(err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(err.Error()))
+		return
+	}
+	err = db.UpdateUser(&user)
+	if err != nil {
+		log.Error(err)
+		w.WriteHeader(utils.ResponseCodes("conflict"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(err.Error()))
+		return
+	}
+	json.NewEncoder(w).Encode(*utils.GenerateMessage("user succesfully updated"))
 
 }
 
@@ -167,7 +213,60 @@ func GetRestaurants(w http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(w).Encode(res)
 	}
 }
+
 func UpdateRestaurant(w http.ResponseWriter, req *http.Request) {
+	var restaurant models.Restaurant
+	var err error
+	updateParent := false
+
+	params := req.URL.Query()
+
+	temp := params.Get("update_parent")
+	if temp == "true" {
+		updateParent = true
+	}
+
+	id := params.Get("id")
+	if len(id) == 0 {
+		id = mux.Vars(req)["id"]
+	}
+	if len(id) == 0 {
+		// through error
+		msg := "Missing restaurant venue id"
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	restaurant.ID, err = strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		msg := "Invalid restaurant id"
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+	}
+	err = json.NewDecoder(req.Body).Decode(&restaurant)
+	if err != nil {
+		msg := "Invalid JSON passed"
+		log.Error(msg, err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(msg))
+		return
+	}
+	//check if user is good
+	err = utils.ValidateNewRestaurant(&restaurant)
+	if err != nil {
+		log.Error(err)
+		w.WriteHeader(utils.ResponseCodes("bad request"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(err.Error()))
+		return
+	}
+	err = db.UpdateVenue(&restaurant, updateParent)
+	if err != nil {
+		log.Error(err)
+		w.WriteHeader(utils.ResponseCodes("conflict"))
+		json.NewEncoder(w).Encode(*utils.GenerateError(err.Error()))
+		return
+	}
+	json.NewEncoder(w).Encode(*utils.GenerateMessage("restaurant succesfully updated"))
 
 }
 

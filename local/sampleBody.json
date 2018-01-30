@@ -23,3 +23,20 @@ ratings_post = {
   "user_id" : 3,
   "comments" : "A post hangover miracle!"
 }
+
+user_put = {
+  "first_name" : "Goodman",
+  "last_name" : "Dracula",
+  "phone" : "1234567891"
+}
+
+restraunt_put = {
+  "name" : "DOSA",
+  "category" : "Indian",
+  "venue":{
+    "city" : "San Mateo",
+    "state" : "CA",
+    "street_address" : "4561 Abc st.",
+    "zip_code" : "94123"
+  }
+}

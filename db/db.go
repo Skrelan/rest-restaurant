@@ -24,6 +24,10 @@ type configs struct {
 	SSLMode string `json:"ssl_mode"`
 }
 
+type count struct {
+	Count int `db:"count"`
+}
+
 func (cfg *configs) ready() {
 	plan, err := ioutil.ReadFile("db/config.json")
 	if err != nil {
@@ -91,6 +95,33 @@ func InsertIntoUsers(user *models.User) error {
 	}
 	query := fmt.Sprintf(INSERTINTOUSERS, user.FirstName, user.LastName, user.Phone)
 	defer db.Close()
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UpdateUser is called to update a user
+func UpdateUser(user *models.User) error {
+	var check count
+	db, err := cfg.startConnection()
+	if db == nil {
+		return err
+	}
+	query := fmt.Sprintf(CHECKUSER, user.ID)
+	log.Info("running query:", query)
+	err = db.Get(&check, query)
+	defer db.Close()
+	if err != nil {
+		return err
+	}
+	if check.Count < 1 {
+		return fmt.Errorf("requested ID does not exsist")
+	}
+	query = fmt.Sprintf(UPDATEUSER, user.FirstName, user.LastName, user.Phone, user.ID)
 	log.Info("running query:", query)
 	_, err = db.Query(query)
 	if err != nil {
@@ -181,6 +212,70 @@ func GetVenuesWhere(where, limit, offset *string) (*[]models.Restaurant, error) 
 	return &restaurants, nil
 }
 
+// UpdateVenue is called to update a Venue and/or create a new Parent Restaurant
+func UpdateVenue(restaurant *models.Restaurant, updateParent bool) error {
+	var check count
+	var query string
+	db, err := cfg.startConnection()
+	if db == nil {
+		return err
+	}
+
+	query = fmt.Sprintf(CHECKVENUE, restaurant.ID)
+	log.Info("running query:", query)
+	err = db.Get(&check, query)
+	defer db.Close()
+	if err != nil {
+		return err
+	}
+	if check.Count < 1 {
+		return fmt.Errorf("requested ID does not exsist")
+	}
+	if updateParent {
+		query = fmt.Sprintf(UPDATERESTAURANT,
+			restaurant.Name, restaurant.Category, restaurant.ID)
+	} else {
+		query = fmt.Sprintf(INSERTINTORESTAURANTS,
+			restaurant.Name, restaurant.Category)
+	}
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		return err
+	}
+	query = fmt.Sprintf(UPDATEVENUE,
+		restaurant.Venue.StreetAddress,
+		restaurant.Venue.City,
+		restaurant.Venue.State,
+		restaurant.Venue.ZipCode,
+		restaurant.Name,
+		restaurant.Category,
+		restaurant.ID)
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UpdateRestaurant is called to update a parent restaurant
+func UpdateRestaurant(restaurant *models.Restaurant) error {
+	db, err := cfg.startConnection()
+	if db == nil {
+		return err
+	}
+	query := fmt.Sprintf(UPDATERESTAURANT, restaurant.Name, restaurant.Category, restaurant.ID)
+	defer db.Close()
+	log.Info("running query:", query)
+	_, err = db.Query(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // GetAllRatings get's all the reviews by restaurant/user/venue
 func GetAllRatings(limit, offset *string) (*[]models.UserRestaurantRating, error) {
 	ratings := make([]models.UserRestaurantRating, 0, 0)
@@ -221,9 +316,6 @@ func init() {
 
 // InsertIntoRatings inserts a new rating
 func InsertIntoRatings(rating *models.Rating) (string, error) {
-	type count struct {
-		Count int `db:"count"`
-	}
 	var check count
 	db, err := cfg.startConnection()
 	if db == nil {
@@ -262,6 +354,5 @@ func InsertIntoRatings(rating *models.Rating) (string, error) {
 		msg := "User has already given a rating to this venue of the restaurant"
 		return msg, err
 	}
-
 	return "", nil
 }
