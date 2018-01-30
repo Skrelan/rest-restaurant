@@ -55,6 +55,8 @@ SELECT
 FROM venues as v
 INNER JOIN restaurants as r
 ON r.id = v.restaurant_id
+INNER JOIN ratings as rate
+ON rate.venue_id = v.id
 WHERE %s
 LIMIT %s
 OFFSET %s`
@@ -73,7 +75,8 @@ SELECT
   rate.id as "rate.id",
   rate.cost as "rate.cost",
   rate.food as "rate.food",
-  rate.cleanliness_service as "rate.cleanliness_service",
+  rate.cleanliness as "rate.cleanliness",
+  rate.service as "rate.service",
   rate.total_score as "rate.total_score",
   rate.comments as "rate.comments",
   rate.date_time_created as "rate.date_time_created",
@@ -104,7 +107,8 @@ SELECT
   rate.id as "rate.id",
   rate.cost as "rate.cost",
   rate.food as "rate.food",
-  rate.cleanliness_service as "rate.cleanliness_service",
+  rate.cleanliness as "rate.cleanliness",
+  rate.service as "rate.service",
   rate.total_score as "rate.total_score",
   rate.comments as "rate.comments",
   rate.date_time_created as "rate.date_time_created",
@@ -159,7 +163,8 @@ const INSERTINTORATINGS = `
 INSERT INTO ratings
 (cost,
  food,
- cleanliness_service,
+ cleanliness,
+ service,
  total_score,
  venue_id,
  user_id,
@@ -167,7 +172,7 @@ INSERT INTO ratings
  date_time_created,
  date_time_updated)
 VALUES
-( %d, %d, %d, %f, %d, %d, '%s', '%s', '%s')`
+( %d, %d, %d, %d, %f, %d, %d, '%s', '%s', '%s')`
 
 // UPDATEUSER updates a users info
 const UPDATEUSER = `
@@ -216,7 +221,8 @@ UPDATE ratings
 SET
  cost = %d,
  food = %d,
- cleanliness_service = %d,
+ cleanliness = %d,
+ service = %d,
  total_score = %f,
  comments = '%s',
  date_time_updated = '%s'

@@ -26,16 +26,17 @@ type Restaurant struct {
 
 // Rating is the structure for the Ratings data
 type Rating struct {
-	ID                 int64   `json:"id,omitempty" db:"id"`
-	Cost               int64   `json:"cost,omitempty" db:"cost"`
-	Food               int64   `json:"food,omitempty" db:"food"`
-	CleanlinessService int64   `json:"cleanliness_service,omitempty" db:"cleanliness_service"`
-	TotalScore         float64 `json:"total_score,omitempty" db:"total_score"`
-	RestaurantID       int64   `json:"restaurant_id,omitempty" db:"restaurant_id"`
-	UserID             int64   `json:"user_id,omitempty" db:"user_id"`
-	Comments           string  `json:"comments,omitempty" db:"comments"`
-	DateCreated        string  `json:"date_time_created,omitempty" db:"date_time_created"`
-	DateUpdated        string  `json:"date_time_updated,omitempty" db:"date_time_updated"`
+	ID           int64   `json:"id,omitempty" db:"id"`
+	Cost         int64   `json:"cost,omitempty" db:"cost"`
+	Food         int64   `json:"food,omitempty" db:"food"`
+	Cleanliness  int64   `json:"cleanliness,omitempty" db:"cleanliness"`
+	Service      int64   `json:"service,omitempty" db:"service"`
+	TotalScore   float64 `json:"total_score,omitempty" db:"total_score"`
+	RestaurantID int64   `json:"restaurant_id,omitempty" db:"restaurant_id"`
+	UserID       int64   `json:"user_id,omitempty" db:"user_id"`
+	Comments     string  `json:"comments,omitempty" db:"comments"`
+	DateCreated  string  `json:"date_time_created,omitempty" db:"date_time_created"`
+	DateUpdated  string  `json:"date_time_updated,omitempty" db:"date_time_updated"`
 }
 
 // UserRestaurantRating is the structure used for Ratings feed

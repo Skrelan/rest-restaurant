@@ -1,5 +1,5 @@
 # RESTful Restaurant Review API
-#### Intro
+### Goal
 A restaurant review software startup provides rating services to consumers. The company
 needs a RESTful API service to create and query rating info of restaurants. Your task is to
 design and implement the API service.
@@ -11,7 +11,7 @@ restaurant per location.
 Cost, Food, Cleanliness, and Service are required rating criteria with min/max values from
 1 to 5 (star) for user to rate the restaurant; the rating must comply with the range
 constraint. The API will calculate the total score by averaging these criteria. A user can give
-a rating to the same restaurant no more than once a month. If the total score is 1, the user
+a rating to the same restaurant no more than **once a month**. If the total score is 1, the user
 must provide a comment. The API should return an appropriate error message and error
 code if the validation failed.
 
@@ -185,7 +185,8 @@ constraints:
 |id   | SERIAL   |   
 |cost   |  SMALLINT |  
 |food   |  SMALLINT |   
-|cleanliness_service   |  SMALLINT |  
+|cleanliness  |  SMALLINT |  
+|service  |  SMALLINT |
 |total_score   |   NUMERIC(5,2) |
 | venue_id     |   INT          |
 | user_id      |   INT          |
