@@ -202,6 +202,7 @@ constraints:
 * ` foreign key (user_id)
  REFERENCES users (id)`
 
+![db](local/db_relations.png)
  ------
 
  ### Code distribution
