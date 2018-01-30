@@ -27,7 +27,7 @@ The software stack of this web-service can be broken down as follows:
 |---|---     |---            |---            |
 |**GET**| `/users`<br> `/users?id=1,2` <br> `/users/{id}` | `/restaurants` <br> `/restaurants?id=1,2`<br> `/restaurants?name=dosa&city=San%20Jose` <br> `/restaurants/{id}`  | `/ratings` <br> `/ratings?user_id=1` <br> `/ratings?restaurant_id=1` <br> `/ratings/{id}` <br>|
 |**POST**   | `/users`   | `/restaurants`  | `/ratings`   |
-|**PUT**   | `/users?id=1` <br> `/users/{id}`   | `/restaurant?id=1` <br> `/restaurant/{id}`  | `/ratings?id=1` <br> `/ratings/{id}` <br> `/ratings/user_id=1&restaurant_id=2`   |  
+|**PUT**   | `/users?id=1` <br> `/users/{id}`   | `/restaurant?id=1` <br> `/restaurant/{id}` <br> `/restaurant?id=1&update_parent=true` <br> `/restaurant/{id}?update_parent=true` | `/ratings?id=1` <br> `/ratings/{id}` <br> `/ratings/user_id=1&restaurant_id=2`   |  
 |**DELETE**   | None  |  None  | None  |
 
 
@@ -35,71 +35,86 @@ The software stack of this web-service can be broken down as follows:
 
 ### Endpoints
 #### /v1
+**NOTE** : ALL endpoints that accept id as a parameter can be accessed as either `v1/entity/{id}` or `v1/entity?id={id}`. This is done to make integrating and developing new features in the front-end; that require to access the APIs, easier.
+
 * `/users`:
   * Description : Get user(s) info
     * Method Type: `GET`
-    * Input :
-    * Output :
+    * Parameters :
+      * `None` : can be called with no parameter
+      * `id` : can be called by user id(s)
+    * Input : None
+    * Output : JSON; Array of [models.User]()
 
   * Description : Update a user
     * Method Type: `PUT`
-    * Input :
-    * Output :    
+    * Parameters :
+      * `id` : id of user to be updated
+    * Input : JSON of type [models.User]()
+    * Output : JSON; status message
 
   * Description : Create a user
     * Method Type: `POST`
-    * Input :
-    * Output :
-
-  * Description :
-    * Method Type: `DELETE`
-    * Input :
-    * Output :
-
+    * Parameters :
+      * `None` : can be called with no parameter
+    * Input : JSON of type [models.User]()
+    * Output : JSON; status message
 
 * `/restaurants`:
-
   * Description : Get restaurant(s) by name / city/ category/total score
     * Method Type: `GET`
-    * Input :
-    * Output :
+    * Parameters :
+      * `None` : can be called with no parameter
+      * `id` : can be called by restaurant by id(s)
+      * `zip_code` : can be called by 5 digit zip_code(s)
+      * `name` : can be called by name(s)
+      * `category` : can be called by category
+      * `city` : can be called by city
+      * `total_score` : can be called total_score
+    * Input : None
+    * Output : JSON; array of [models.Restaurant]()
 
   * Description : Update a restaurant
     * Method Type: `PUT`
-    * Input :
-    * Output :    
+    * Parameters :
+      * `id` : can be called by restaurant by id(s). **NOTE** : changing the name of the restaurant will only impact this venue with given id
+      * `update_parent` : boolean, if enabled, changing the restaurant name/category will impact all other venues as well
+    * Input : JSON; [models.Restaurant]()
+    * Output : JSON; status message
+
 
   * Description : Create a restaurant
     * Method Type: `POST`
-    * Input :
-    * Output :
+    * Parameters :
+      * `None` : can be called with no parameter
+    * Input : JSON; [models.Restaurant]()
+    * Output : JSON; status message
 
-  * Description :
-    * Method Type: `DELETE`
-    * Input :
-    * Output :
-
-
-* `/reviews`:
-  * Description : Create a rating for a restaurant by a user
-    * Method Type: `POST`
-    * Input :
-    * Output :
+* `/ratings`:
+  * Description : Get ratings
+    * Method Type: `GET`
+    * Parameters :
+      * `None` : can be called with no parameter
+      * `id` : can be called by rating id(s)
+      * `user_id` : can be called by user id(s)
+      * `restaurant_id` : can be called by restaurant id(s)
+    * Input : None
+    * Output : JSON; array of type [models.Rating]()
 
   * Description : Update a rating for a restaurant by a user
     * Method Type: `PUT`
-    * Input :
-    * Output :    
+    * Parameters :
+      * `id` : can be called by rating id
+    * Input : JSON; [models.Rating]()
+    * Output : JSON; status message
 
-  * Description :
-    * Method Type: `GET`
-    * Input :
-    * Output :
+  * Description :  Create a rating for a restaurant by a user
+    * Method Type: `POST`
+    * Parameters :
+      * `None` : can be called with no parameter
+    * Input : JSON; [models.Rating]()
+    * Output :  JSON; status message
 
-  * Description :
-    * Method Type: `GET`
-    * Input :
-    * Output :
 
 -----
 
@@ -191,5 +206,30 @@ constraints:
  * [encoding/json](https://golang.org/pkg/encoding/json/)
  * [fmt](https://golang.org/pkg/fmt/)
  * [strings](https://golang.org/pkg/strings/)
+ * [testify](https://github.com/stretchr/testify)
+ * [testing](https://golang.org/pkg/testing)
 
  ----
+
+### Running
+In order to run the web-service, make sure you have all the required packages installed and have GO 1.8 set up locally. Install the below package in your go root by either manually moving it there or by running `go get github.com/skrelan/rest-restaurant` _(it might fail as this repo is private)_
+
+Also make sure the following files exist, w.r.t project root.
+* `db/config.json`
+* `rest-restaurant`^
+
+^_optional_
+<br>
+
+To run the application go to the project root and either run:
+* Option 1
+```
+$ go build
+$ ./rest-restaurant
+```
+* Option 2
+```
+$ go run main.go
+```
+
+By default the application should listen to `localhost:8000` and all the API endpoints can be called on that.
