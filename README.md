@@ -25,7 +25,7 @@ The software stack of this web-service can be broken down as follows:
 
 |   | /user  | /restaurant   | /ratings      |
 |---|---     |---            |---            |
-|**GET**| `/users`<br> `/users?id=1,2` <br> `/users/{id}` | `/restaurants` <br> `/restaurants?id=1,2`<br> `/restaurants?name=dosa&city=San%20Jose` <br> `/restaurants/{id}`  | `/ratings` <br> `/ratings?user_id=1` <br> `/ratings?restaurant_id=1` <br> `/ratings/{id}` <br>|
+|**GET**| `/users`<br> `/users?id=1,2` <br> `/users/{id}` | `/restaurants` <br> `/restaurants?id=1,2`<br> `/restaurants?name=dosa&city=San%20Jose` <br> `/restaurants/{id}`  | `/ratings` <br> `/ratings?user_id=1` <br> `/ratings?restaurant_id=1` <br> `/ratings?restaurant_id=1&user_id=2` <br> `/ratings/{id}` <br>|
 |**POST**   | `/users`   | `/restaurants`  | `/ratings`   |
 |**PUT**   | `/users?id=1` <br> `/users/{id}`   | `/restaurant?id=1` <br> `/restaurant/{id}` <br> `/restaurant?id=1&update_parent=true` <br> `/restaurant/{id}?update_parent=true` | `/ratings?id=1` <br> `/ratings/{id}` <br> `/ratings/user_id=1&restaurant_id=2`   |  
 |**DELETE**   | None  |  None  | None  |
@@ -44,20 +44,20 @@ The software stack of this web-service can be broken down as follows:
       * `None` : can be called with no parameter
       * `id` : can be called by user id(s)
     * Input : None
-    * Output : JSON; Array of [models.User]()
+    * Output : JSON; Array of [models.User](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L12)
 
   * Description : Update a user
     * Method Type: `PUT`
     * Parameters :
       * `id` : id of user to be updated
-    * Input : JSON of type [models.User]()
+    * Input : JSON of type [models.User](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L12)
     * Output : JSON; status message
 
   * Description : Create a user
     * Method Type: `POST`
     * Parameters :
       * `None` : can be called with no parameter
-    * Input : JSON of type [models.User]()
+    * Input : JSON of type [models.User](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L12)
     * Output : JSON; status message
 
 * `/restaurants`:
@@ -72,14 +72,14 @@ The software stack of this web-service can be broken down as follows:
       * `city` : can be called by city
       * `total_score` : can be called total_score
     * Input : None
-    * Output : JSON; array of [models.Restaurant]()
+    * Output : JSON; array of [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L20)
 
   * Description : Update a restaurant
     * Method Type: `PUT`
     * Parameters :
       * `id` : can be called by restaurant by id(s). **NOTE** : changing the name of the restaurant will only impact this venue with given id
       * `update_parent` : boolean, if enabled, changing the restaurant name/category will impact all other venues as well
-    * Input : JSON; [models.Restaurant]()
+    * Input : JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L20)
     * Output : JSON; status message
 
 
@@ -87,7 +87,7 @@ The software stack of this web-service can be broken down as follows:
     * Method Type: `POST`
     * Parameters :
       * `None` : can be called with no parameter
-    * Input : JSON; [models.Restaurant]()
+    * Input : JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L20)
     * Output : JSON; status message
 
 * `/ratings`:
@@ -99,20 +99,20 @@ The software stack of this web-service can be broken down as follows:
       * `user_id` : can be called by user id(s)
       * `restaurant_id` : can be called by restaurant id(s)
     * Input : None
-    * Output : JSON; array of type [models.Rating]()
+    * Output : JSON; array of type [models.UserRestaurantRating](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L42)
 
   * Description : Update a rating for a restaurant by a user
     * Method Type: `PUT`
     * Parameters :
       * `id` : can be called by rating id
-    * Input : JSON; [models.Rating]()
+    * Input : JSON; [models.Rating](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L28)
     * Output : JSON; status message
 
   * Description :  Create a rating for a restaurant by a user
     * Method Type: `POST`
     * Parameters :
       * `None` : can be called with no parameter
-    * Input : JSON; [models.Rating]()
+    * Input : JSON; [models.Rating](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L28)
     * Output :  JSON; status message
 
 
