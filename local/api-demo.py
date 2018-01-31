@@ -73,7 +73,7 @@ def test_data(type_requested):
         "cleanliness": 3,
         "service": 4,
         "restaurant_id": 3,
-        "user_id": 3,
+        "user_id": 4,
         "comments": "A post hangover miracle!"
     }, {
         "cost": 1,
@@ -219,8 +219,8 @@ def test_PUT_rating():
         base_url.format(PORT, "/v1/ratings"),
         base_url.format(PORT, "/v1/ratings/4"),
         base_url.format(PORT, "/v1/ratings/4"),
-        base_url.format(PORT, "/v1/ratings?user_id=3&restaurant_id=3"),
-        base_url.format(PORT, "/v1/ratings?user_id=3&restaurant_id=3")
+        base_url.format(PORT, "/v1/ratings?user_id=4&restaurant_id=3"),
+        base_url.format(PORT, "/v1/ratings?user_id=4&restaurant_id=3")
     ]
     data = test_data("ratings")
     PUT(urls, [data[1], data[1], data[2], data[1], data[2]])

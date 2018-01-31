@@ -55,7 +55,7 @@ SELECT
 FROM venues as v
 INNER JOIN restaurants as r
 ON r.id = v.restaurant_id
-INNER JOIN aggregated_venue_score as avs
+LEFT JOIN aggregated_venue_score as avs
 ON v.id = avs.venue_id
 WHERE %s
 LIMIT %s
@@ -125,6 +125,14 @@ ORDER by "rate.date_time_updated" DESC
 LIMIT %s
 OFFSET %s
 `
+
+// GETRATINGID is used to get the id of a rating given it's user_id and venue_id
+const GETRATINGID = `
+SELECT rate.id as "id"
+FROM ratings as rate
+WHERE
+ rate.user_id = %s AND
+ rate.venue_id = %s`
 
 //INSERTINTOUSERS is the query used to create a new user
 const INSERTINTOUSERS = `

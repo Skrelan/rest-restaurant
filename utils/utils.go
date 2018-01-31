@@ -26,6 +26,7 @@ func init() {
 		"expect­ation failed": 417,
 		"I'm a teapot":        418,
 		"upgrade required":    426,
+		"server issue":        500,
 	}
 }
 
