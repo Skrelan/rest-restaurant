@@ -59,12 +59,12 @@ For demo/testing use [api-demo.py](https://github.com/Skrelan/rest-restaurant/bl
 **NOTE** : ALL endpoints that accept id as a parameter can be accessed as either `v1/entity/{id}` or `v1/entity?id={id}`. This is done to make integrating and developing new features in the front-end; that require to access the APIs, easier.
 
 | Endpoint | Method | Parameters | Input | Output | Description |
-| -------- | -------| ---------- | ------------|
+| -------- | -------| ---------- | ------------| ----| ---- |
 | `/v1/users` | | | | | |
 | |  GET     | `None` : can be called with no parameter  <br> <br> `id` : can be called by user id(s)        |   None |  JSON; Array of [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12) | Get user(s) info |
 | | POST | `None` : can be called with no parameter | JSON; [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12) | JSON; status message | Create a user|
 | | PUT |  `id` : id of user to be updated | JSON; [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12) | JSON; status message | Update a user <br> <br> id required |
-| `/v1/restaurants` |
+| `/v1/restaurants` | | | | | |
 | | GET | `None` : can be called with no parameter <br><br> `None` : can be called with no parameter <br><br> `id` : can be called by restaurant by id(s) <br><br> `zip_code` : can be called by 5 digit zip_code(s) <br><br> `name` : can be called by name(s) <br><br> `category` : can be called by category <br><br> `city` : can be called by city <br><br> `total_score` : can be called total_score | None | JSON; array of [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20) | Get restaurant(s) by name/city/category/total score |
 | | POST | `None` : can be called with no parameter | JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20) | JSON; status message | Create a restaurant |
 | | PUT | `id` : can be called by restaurant by id(s). <br><br> `update_parent` : boolean, if enabled, changing the restaurant name/category will impact all other venues as well | JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20) | JSON; status message | Update a restaurant(s) <br> <br> id required <br><br> **NOTE** : changing the name of the restaurant will only impact this venue with given id, if `update_parent` is NOT set to true|
