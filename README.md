@@ -233,18 +233,17 @@ GROUP by v.id;
   $ go run main.go
   ```
 
-  By default the application should listen to `localhost:8000` and all the API endpoints can be called on that.
+  * By default the application should listen to `localhost:8000` and all the API endpoints can be called on that.
 
 5. To test the API's there are two ways as well,
   1. manually make requests to each endpoint.
   2. use the python script, that I wrote to automate option 1.
-  
-  <br>
+
   To run the python script, run the following:
-  ```
-  $ cd local
-  $ python run api-demo.py
-  ```
+    ```
+    $ cd local
+    $ python run api-demo.py
+    ```
 
 ----
 ### Constraints
