@@ -140,7 +140,10 @@ The DB has 4 tables, they are as follows:
 2. `restaurants`
 3. `venues`
 4. `ratings`
+The DB has 1 view
+1. `aggregated_venue_score`
 
+#### Tables:
 ##### 1.users
 |col_name   |type   |  
 |---|---|
@@ -202,6 +205,27 @@ constraints:
 * ` foreign key (user_id)
  REFERENCES users (id)`
 
+### Views
+
+##### aggregated_venue_score
+
+|col_name   | value   |  
+|---|---|
+|venue_id   | venues.id   |   
+|score   |  AVG(rate.total_score)) |  
+
+```
+CREATE OR REPLACE VIEW aggregated_venue_score AS
+SELECT
+    v.id as "venue_id",
+    AVG(rate.total_score) as "score"
+FROM ratings as rate
+INNER JOIN venues AS v
+ON rate.venue_id = v.id
+GROUP by v.id;
+```
+
+Diagram :
 ![db](local/db_relations.png)
  ------
 

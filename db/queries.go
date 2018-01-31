@@ -55,8 +55,8 @@ SELECT
 FROM venues as v
 INNER JOIN restaurants as r
 ON r.id = v.restaurant_id
-INNER JOIN ratings as rate
-ON rate.venue_id = v.id
+INNER JOIN aggregated_venue_score as avs
+ON v.id = avs.venue_id
 WHERE %s
 LIMIT %s
 OFFSET %s`

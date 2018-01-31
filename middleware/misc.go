@@ -34,9 +34,9 @@ func restaurantFilters(params *url.Values) *[]string {
 		temp := fmt.Sprintf("LOWER(r.category) = LOWER('%s')", category)
 		clauses = append(clauses, temp)
 	}
-	totalscore := params.Get("totalscore")
+	totalscore := params.Get("total_score")
 	if len(totalscore) > 0 {
-		temp := fmt.Sprintf("rate.total_score > %s", totalscore)
+		temp := fmt.Sprintf("avs.score >=%s", totalscore)
 		clauses = append(clauses, temp)
 	}
 	name := params.Get("name")
