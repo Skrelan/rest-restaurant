@@ -2,11 +2,13 @@ package utils
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/skrelan/rest-restaurant/models"
 )
 
 var responseCodes map[string]int
+var replacer = strings.NewReplacer("'", "''") //for POSTGRES strings with ' / single quotes
 
 func init() {
 	responseCodes = map[string]int{
@@ -116,5 +118,6 @@ func ValidateNewRating(rating *models.Rating, update bool) error {
 	if (rating.TotalScore < 2) && (len(rating.Comments) == 0) {
 		return fmt.Errorf("average rating is 1 and comments field is empty")
 	}
+	rating.Comments = replacer.Replace(rating.Comments)
 	return nil
 }

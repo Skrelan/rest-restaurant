@@ -21,8 +21,8 @@ for integration and live testing.
 tests.
 
 - But, since this is a demo code repository and
-since one would anyway manually test these endpoints for the demo,
-I figured why not have python do that for us as well?
+since one would manually test these endpoints for the demo,
+why not have python do that for us?
 """
 
 PORT = 8000

@@ -36,8 +36,9 @@ The software stack of this web-service can be broken down as follows:
 * Database : Postgres DB
 * Frontend^ : Javascript, HTML5, CSS3
 
+(_Frontend not implemented in this release_)^
+
 For demo/testing use [api-demo.py](https://github.com/Skrelan/rest-restaurant/blob/master/local/api-demo.py)(_optional_) : Python 2.7
-__^not implemented in this release__
 
 ------
 
@@ -57,83 +58,20 @@ __^not implemented in this release__
 #### /v1
 **NOTE** : ALL endpoints that accept id as a parameter can be accessed as either `v1/entity/{id}` or `v1/entity?id={id}`. This is done to make integrating and developing new features in the front-end; that require to access the APIs, easier.
 
-* `/users`:
-  * Description : Get user(s) info
-    * Method Type: `GET`
-    * Parameters :
-      * `None` : can be called with no parameter
-      * `id` : can be called by user id(s)
-    * Input : None
-    * Output : JSON; Array of [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12)
-
-  * Description : Update a user
-    * Method Type: `PUT`
-    * Parameters :
-      * `id` : id of user to be updated
-    * Input : JSON of type [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12)
-    * Output : JSON; status message
-
-  * Description : Create a user
-    * Method Type: `POST`
-    * Parameters :
-      * `None` : can be called with no parameter
-    * Input : JSON of type [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12)
-    * Output : JSON; status message
-
-* `/restaurants`:
-  * Description : Get restaurant(s) by name / city/ category/total score
-    * Method Type: `GET`
-    * Parameters :
-      * `None` : can be called with no parameter
-      * `id` : can be called by restaurant by id(s)
-      * `zip_code` : can be called by 5 digit zip_code(s)
-      * `name` : can be called by name(s)
-      * `category` : can be called by category
-      * `city` : can be called by city
-      * `total_score` : can be called total_score
-    * Input : None
-    * Output : JSON; array of [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20)
-
-  * Description : Update a restaurant
-    * Method Type: `PUT`
-    * Parameters :
-      * `id` : can be called by restaurant by id(s). **NOTE** : changing the name of the restaurant will only impact this venue with given id
-      * `update_parent` : boolean, if enabled, changing the restaurant name/category will impact all other venues as well
-    * Input : JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20)
-    * Output : JSON; status message
-
-
-  * Description : Create a restaurant
-    * Method Type: `POST`
-    * Parameters :
-      * `None` : can be called with no parameter
-    * Input : JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20)
-    * Output : JSON; status message
-
-* `/ratings`:
-  * Description : Get ratings
-    * Method Type: `GET`
-    * Parameters :
-      * `None` : can be called with no parameter
-      * `id` : can be called by rating id(s)
-      * `user_id` : can be called by user id(s)
-      * `restaurant_id` : can be called by restaurant id(s)
-    * Input : None
-    * Output : JSON; array of type [models.UserRestaurantRating](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L42)
-
-  * Description : Update a rating for a restaurant by a user
-    * Method Type: `PUT`
-    * Parameters :
-      * `id` : can be called by rating id
-    * Input : JSON; [models.Rating](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L28)
-    * Output : JSON; status message
-
-  * Description :  Create a rating for a restaurant by a user
-    * Method Type: `POST`
-    * Parameters :
-      * `None` : can be called with no parameter
-    * Input : JSON; [models.Rating](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L28)
-    * Output :  JSON; status message
+| Endpoint | Method | Parameters | Input | Output | Description |
+| -------- | -------| ---------- | ------------| ----| ---- |
+| `/v1/users` | | | | | |
+| |  GET     | `None` : can be called with no parameter  <br> <br> `id` : can be called by user id(s)        |   None |  JSON; Array of [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12) | Get user(s) info |
+| | POST | `None` : can be called with no parameter | JSON; [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12) | JSON; status message | Create a user|
+| | PUT |  `id` : id of user to be updated | JSON; [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12) | JSON; status message | Update a user <br> <br> id required |
+| `/v1/restaurants` | | | | | |
+| | GET | `None` : can be called with no parameter <br><br> `id` : can be called by restaurant by id(s) <br><br> `zip_code` : can be called by 5 digit zip_code(s) <br><br> `name` : can be called by name(s) <br><br> `category` : can be called by category <br><br> `city` : can be called by city <br><br> `total_score` : can be called total_score | None | JSON; array of [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20) | Get restaurant(s) by name/city/category/total score |
+| | POST | `None` : can be called with no parameter | JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20) | JSON; status message | Create a restaurant |
+| | PUT | `id` : can be called by restaurant by id(s). <br><br> `update_parent` : boolean, if enabled, changing the restaurant name/category will impact all other venues as well | JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20) | JSON; status message | Update a restaurant(s) <br> <br> id required <br><br> **NOTE** : changing the name of the restaurant will only impact this venue with given id, if `update_parent` is NOT set to true|
+| `/v1/ratings` | | | | | |
+|| GET| `None` : can be called with no parameter <br><br> `id` : can be called by rating id(s) <br><br> `user_id` : can be called by user id(s) <br><br> `restaurant_id` : can be called by restaurant id(s) | None | JSON; array of type [models.UserRestaurantRating](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L42) | Get ratings |
+| | POST| `None` : can be called with no parameter | JSON; [models.Rating](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L28) | JSON; status message | Create a rating for a restaurant venue by a user <br><br> **NOTE:** user can only give a venue of a restaurant a review, if the user: <br> 1. has not given rating to a different venue of the same restaurant in the past 30 days <br> 2. has not already given a review to the same venue.|
+| | PUT | `id` : can be called by rating id <br><br> `restaurant_id`: id of the restaurant venue <br><br>`user_id`: id of the user | JSON; [models.Rating](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L28) | JSON; status message | Update a rating for a restaurant by a user <br><br> id required <br>OR<br> both restaurant_id & user_id required |
 
 
 -----
@@ -229,11 +167,13 @@ ON rate.venue_id = v.id
 GROUP by v.id;
 ```
 
-Diagram :
+##### DB Diagram :
+
 ![db](local/db_relations.png)
+
  ------
 
- ### Code distribution
+### Code distribution
  The RESTful web-service is written GOlang and each independent chunk of code is bundled up into it's own individual package. The following packages exist in the code in this repository:
 
  * **db pkg** : This package contains the code for all the DB related functions, such as reading DB configs, setting up a DB connection, functions that are used to Query the DB, etc.
