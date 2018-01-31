@@ -198,38 +198,53 @@ GROUP by v.id;
  ----
 
 ### Running
-In order to run the web-service, make sure you have all the required packages installed and have GO 1.8 set up locally. Install the below package in your go root by either manually moving it there or by running `go get github.com/skrelan/rest-restaurant` _(it might fail as this repo is private)_
 
-Also make sure the following files exist, w.r.t project root.
-* `db/config.json`
-* `rest-restaurant`^
+1. Set up a Postgres DB locally and run the [migrations](https://github.com/Skrelan/rest-restaurant/tree/master/db/migration)
 
-^_optional_
-<br>
+2. Set up `db/config.json` as shown:
+  ```
+  {
+    "host" : "localhost",
+    "db_type" : "postgres",
+    "db_name" : "rest_restaurants",
+    "user" : "", //your user name
+    "token" : "", //your user token
+    "ssl_mode" : "disable"
+  }
+  ```
 
-To run the application go to the project root and either run:
-* Option 1
-```
-$ go build
-$ ./rest-restaurant
-```
-* Option 2
-```
-$ go run main.go
-```
+3. Make sure you have all the required packages installed and have GO 1.8 set up locally. Install the below package in your go root by either manually moving it there or by running `go get github.com/skrelan/rest-restaurant` _(it might fail as this repo is private)_
 
+  Also make sure the following files exist, w.r.t project root.
+  * `db/config.json`
+  * `rest-restaurant`^
 
-By default the application should listen to `localhost:8000` and all the API endpoints can be called on that.
+  ^_optional_
+  <br>
 
-To test the API's there are two ways as well,
-1. manually make requests to each endpoint.
-2. use the python script, that I wrote to automate option 1.
+4. To run the application go to the project root and either run:
+  * Option 1
+  ```
+  $ go build
+  $ ./rest-restaurant
+  ```
+  * Option 2
+  ```
+  $ go run main.go
+  ```
 
-To run the python script, run the following:
-```
-$ cd local
-$ python run api-demo.py
-```
+  By default the application should listen to `localhost:8000` and all the API endpoints can be called on that.
+
+5. To test the API's there are two ways as well,
+  1. manually make requests to each endpoint.
+  2. use the python script, that I wrote to automate option 1.
+  
+  <br>
+  To run the python script, run the following:
+  ```
+  $ cd local
+  $ python run api-demo.py
+  ```
 
 ----
 ### Constraints
