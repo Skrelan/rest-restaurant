@@ -223,26 +223,25 @@ GROUP by v.id;
   <br>
 
 4. To run the application go to the project root and either run:
-  * Option 1
-  ```
-  $ go build
-  $ ./rest-restaurant
-  ```
-  * Option 2
-  ```
-  $ go run main.go
-  ```
-
-  * By default the application should listen to `localhost:8000` and all the API endpoints can be called on that.
-
-5. To test the API's there are two ways as well,
-  1. manually make requests to each endpoint.
-  2. use the python script, that I wrote to automate option 1.
-
-  To run the python script, run the following:
+    * Option 1
     ```
-    $ cd local
-    $ python run api-demo.py
+    $ go build
+    $ ./rest-restaurant
+    ```
+    * Option 2
+    ```
+    $ go run main.go
+    ```
+    * By default the application should listen to `localhost:8000` and all the API endpoints can be called on that.
+
+5. To test the API's there are two ways as well:
+    1. manually make requests to each endpoint.
+    2. use the python script, that I wrote to automate option 1.
+
+    To run the python script, run the following:
+      ```
+      $ cd local
+      $ python run api-demo.py
     ```
 
 ----
