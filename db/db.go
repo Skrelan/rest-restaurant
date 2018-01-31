@@ -352,13 +352,28 @@ func InsertIntoRatings(rating *models.Rating) (string, error) {
 	return "", nil
 }
 
+// GetRatingID is used to get the id of a rating given it's user_id and venue_id
+func GetRatingID(rating *models.Rating, user_id, venue_id string) error {
+	db, err := cfg.startConnection()
+	if db == nil {
+		return err
+	}
+	query := fmt.Sprintf(GETRATINGID, user_id, venue_id)
+	err = db.Get(rating, query)
+	defer db.Close()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // UpdateRating is the function that is called to update a rating
-func UpdateRating(rating *models.Rating) error {
+func UpdateRating(rating *models.Rating) (error, string) {
 	var check count
 	var query string
 	db, err := cfg.startConnection()
 	if db == nil {
-		return err
+		return err, "server issue"
 	}
 
 	query = fmt.Sprintf(CHECKRATING, rating.ID)
@@ -366,10 +381,10 @@ func UpdateRating(rating *models.Rating) error {
 	err = db.Get(&check, query)
 	defer db.Close()
 	if err != nil {
-		return err
+		return err, "not found"
 	}
 	if check.Count < 1 {
-		return fmt.Errorf("requested ID does not exsist")
+		return fmt.Errorf("requested ID does not exsist"), "not found"
 	}
 
 	query = fmt.Sprintf(UPDATERATING,
@@ -385,10 +400,10 @@ func UpdateRating(rating *models.Rating) error {
 	log.Info("running query:", query)
 	_, err = db.Query(query)
 	if err != nil {
-		return err
+		return err, "conflict"
 	}
 
-	return nil
+	return nil, ""
 }
 
 func init() {

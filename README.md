@@ -24,6 +24,7 @@ code if the validation failed.
 5. Code distribution
 6. Running
 7. Constraints
+8. Future features
 
 ----
 
@@ -33,7 +34,10 @@ The software stack of this web-service can be broken down as follows:
 
 * Backend : GOlang (v1.8)
 * Database : Postgres DB
-* Frontend : Javascript, HTML5, CSS3
+* Frontend^ : Javascript, HTML5, CSS3
+
+For demo/testing use [api-demo.py](https://github.com/Skrelan/rest-restaurant/blob/master/local/api-demo.py)(_optional_) : Python 2.7
+__^not implemented in this release__
 
 ------
 
@@ -60,20 +64,20 @@ The software stack of this web-service can be broken down as follows:
       * `None` : can be called with no parameter
       * `id` : can be called by user id(s)
     * Input : None
-    * Output : JSON; Array of [models.User](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L12)
+    * Output : JSON; Array of [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12)
 
   * Description : Update a user
     * Method Type: `PUT`
     * Parameters :
       * `id` : id of user to be updated
-    * Input : JSON of type [models.User](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L12)
+    * Input : JSON of type [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12)
     * Output : JSON; status message
 
   * Description : Create a user
     * Method Type: `POST`
     * Parameters :
       * `None` : can be called with no parameter
-    * Input : JSON of type [models.User](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L12)
+    * Input : JSON of type [models.User](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L12)
     * Output : JSON; status message
 
 * `/restaurants`:
@@ -88,14 +92,14 @@ The software stack of this web-service can be broken down as follows:
       * `city` : can be called by city
       * `total_score` : can be called total_score
     * Input : None
-    * Output : JSON; array of [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L20)
+    * Output : JSON; array of [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20)
 
   * Description : Update a restaurant
     * Method Type: `PUT`
     * Parameters :
       * `id` : can be called by restaurant by id(s). **NOTE** : changing the name of the restaurant will only impact this venue with given id
       * `update_parent` : boolean, if enabled, changing the restaurant name/category will impact all other venues as well
-    * Input : JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L20)
+    * Input : JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20)
     * Output : JSON; status message
 
 
@@ -103,7 +107,7 @@ The software stack of this web-service can be broken down as follows:
     * Method Type: `POST`
     * Parameters :
       * `None` : can be called with no parameter
-    * Input : JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L20)
+    * Input : JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L20)
     * Output : JSON; status message
 
 * `/ratings`:
@@ -115,7 +119,7 @@ The software stack of this web-service can be broken down as follows:
       * `user_id` : can be called by user id(s)
       * `restaurant_id` : can be called by restaurant id(s)
     * Input : None
-    * Output : JSON; array of type [models.UserRestaurantRating](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L42)
+    * Output : JSON; array of type [models.UserRestaurantRating](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L42)
 
   * Description : Update a rating for a restaurant by a user
     * Method Type: `PUT`
@@ -128,7 +132,7 @@ The software stack of this web-service can be broken down as follows:
     * Method Type: `POST`
     * Parameters :
       * `None` : can be called with no parameter
-    * Input : JSON; [models.Rating](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L28)
+    * Input : JSON; [models.Rating](https://github.com/Skrelan/rest-restaurant/blob/master/models/models.go#L28)
     * Output :  JSON; status message
 
 
@@ -274,4 +278,30 @@ $ ./rest-restaurant
 $ go run main.go
 ```
 
+
 By default the application should listen to `localhost:8000` and all the API endpoints can be called on that.
+
+To test the API's there are two ways as well,
+1. manually make requests to each endpoint.
+2. use the python script, that I wrote to automate option 1.
+
+To run the python script, run the following:
+```
+$ cd local
+$ python run api-demo.py
+```
+
+----
+### Constraints
+
+The following constraints exist:
+- DELETE endpoint has not been enabled
+
+-----
+### Future features for next release(s)
+
+- Better Testing (unit tests and integration test) coverage
+- Front-end development for User Rating feed
+- More validation checks on endpoints
+- Manage environment settings via config files
+- Enabling DELETE endpoint
