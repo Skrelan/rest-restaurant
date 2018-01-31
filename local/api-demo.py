@@ -1,6 +1,7 @@
 import requests
 import pprint
 import json
+import time
 """
 API demo code:
 
@@ -96,35 +97,41 @@ def test_data(type_requested):
 
 def GET(urls):
     for i, url in enumerate(urls):
-        print("\n\n")
         print("running GET request against {}".format(url))
+        if raw_input("Run? (y/n) ").lower() == 'n':
+            continue
         response = requests.get(url=url)
-        print(response)
+        print("\n Response : {0}".format(response))
         pprint.pprint(response.json())
+        print("\n\n")
 
 
 def POST(urls, data):
-    print data
     if not data:
         return "ERROR: invalid test data"
     for i, url in enumerate(urls):
-        print("\n\n")
         print("running POST request against {}".format(url))
+        pprint.pprint(data[i])
+        if raw_input("Run?").lower() == 'n':
+            continue
         response = requests.post(url=url, data=json.dumps(data[i]))
-        print(response)
+        print("\n Response : {0}".format(response))
         pprint.pprint(response.json())
+        print("\n\n")
 
 
 def PUT(urls, data):
-    print data
     if not data:
         return "ERROR: invalid test data"
     for i, url in enumerate(urls):
-        print("\n\n")
         print("running PUT request against {}".format(url))
-        response = requests.post(url=url, data=json.dumps(data[i]))
-        print(response)
+        pprint.pprint(data[i])
+        if raw_input("Run?").lower() == 'n':
+            continue
+        response = requests.put(url=url, data=json.dumps(data[i]))
+        print("\n Response : {0}".format(response))
         pprint.pprint(response.json())
+        print("\n\n")
 
 
 def test_GET_user():
@@ -152,9 +159,9 @@ def test_GET_ratings():
         base_url.format(PORT, "/v1/ratings"),
         base_url.format(PORT, "/v1/ratings/1"),
         base_url.format(PORT, "/v1/ratings?id=1"),
-        base_url.format(PORT, "/v1/ratings/user_id=1"),
+        base_url.format(PORT, "/v1/ratings?user_id=1"),
         base_url.format(PORT, "/v1/ratings?restaurant_id=1"),
-        base_url.format(PORT, "/v1/ratings?user_id=1&restaurat_id=1")
+        base_url.format(PORT, "/v1/ratings?user_id=1&restaurant_id=1")
     ]
     GET(urls)
 
@@ -188,23 +195,23 @@ def test_PUT_user():
 
 def test_PUT_restaurant_single_venue():
     urls = [
-        base_url.format(PORT, "/v1/restaurants?update_parent=true"),
-        base_url.format(PORT, "/v1/restaurants/4?update_parent=true")
+        base_url.format(PORT, "/v1/restaurants"),
+        base_url.format(PORT, "/v1/restaurants/4")
     ]
-    users = test_data("users")
-    PUT(urls, [users[1] for x in range(len(urls))])
-    GET(base_url.format(PORT, "/v1/restaurants/4"))
+    data = test_data("restaurants")
+    PUT(urls, [data[1] for x in range(len(urls))])
+    GET([base_url.format(PORT, "/v1/restaurants/4")])
 
 
 def test_PUT_restaurant_all_venues():
     urls = [
-        base_url.format(PORT, "/v1/restaurants"),
-        base_url.format(PORT, "/v1/restaurants/4")
+        base_url.format(PORT, "/v1/restaurants?update_parent=true"),
+        base_url.format(PORT, "/v1/restaurants/4?update_parent=true")
     ]
-    users = test_data("users")
-    GET(base_url.format(PORT, "/v1/restaurants?name=DOSA"))
-    PUT(urls, [users[2] for x in range(len(urls))])
-    GET(base_url.format(PORT, "/v1/restaurants?name=Tacobell"))
+    data = test_data("restaurants")
+    GET([base_url.format(PORT, "/v1/restaurants?name=DOSA")])
+    PUT(urls, [data[2] for x in range(len(urls))])
+    GET([base_url.format(PORT, "/v1/restaurants?name=Tacobell")])
 
 
 def test_PUT_rating():
@@ -216,20 +223,22 @@ def test_PUT_rating():
         base_url.format(PORT, "/v1/ratings?user_id=3&restaurant_id=3")
     ]
     data = test_data("ratings")
-    PUT(urls, [data[1], data[2], data[1], data[2]])
+    PUT(urls, [data[1], data[1], data[2], data[1], data[2]])
 
 
 def run_tests():
     funcs = [
         test_GET_user, test_POST_user, test_PUT_user, test_GET_restaurants,
         test_POST_restaurant, test_PUT_restaurant_single_venue,
-        test_GET_ratings, test_POST_rating, test_PUT_rating
+        test_PUT_restaurant_all_venues, test_GET_ratings, test_POST_rating,
+        test_PUT_rating
     ]
     for func in funcs:
-        if raw_input("Beging next test?(y/n)\n Check : {} \t".format(
+        if raw_input("Begin next test/demo? (y/n)\n Check : {} \t".format(
                 func.__name__)).lower() == "n":
             continue
         func()
+        print("-" * 50)
 
 
 run_tests()
