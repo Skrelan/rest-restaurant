@@ -1,4 +1,20 @@
 # RESTful Restaurant Review API
+### Goal
+A restaurant review software startup provides rating services to consumers. The company
+needs a RESTful API service to create and query rating info of restaurants. Your task is to
+design and implement the API service.
+
+A restaurant category can be Mexican, Burger, French, Thai, Chinese, Japanese, etc. A
+restaurant may have multiple locations (addresses). A user can only give a rating to a
+restaurant per location.
+
+Cost, Food, Cleanliness, and Service are required rating criteria with min/max values from
+1 to 5 (star) for user to rate the restaurant; the rating must comply with the range
+constraint. The API will calculate the total score by averaging these criteria. A user can give
+a rating to the same restaurant no more than **once a month**. If the total score is 1, the user
+must provide a comment. The API should return an appropriate error message and error
+code if the validation failed.
+
 ### Contents
 
 1. Software Stack
@@ -25,9 +41,9 @@ The software stack of this web-service can be broken down as follows:
 
 |   | /user  | /restaurant   | /ratings      |
 |---|---     |---            |---            |
-|**GET**| `/users`<br> `/users?id=1,2` <br> `/users/{id}` | `/restaurants` <br> `/restaurants?id=1,2`<br> `/restaurants?name=dosa&city=San%20Jose` <br> `/restaurants/{id}`  | `/ratings` <br> `/ratings?user_id=1` <br> `/ratings?restaurant_id=1` <br> `/ratings/{id}` <br>|
+|**GET**| `/users`<br> `/users?id=1,2` <br> `/users/{id}` | `/restaurants` <br> `/restaurants?id=1,2`<br> `/restaurants?name=dosa&city=San%20Jose` <br> `/restaurants/{id}`  | `/ratings` <br> `/ratings?user_id=1` <br> `/ratings?restaurant_id=1` <br> `/ratings?restaurant_id=1&user_id=2` <br> `/ratings/{id}` <br>|
 |**POST**   | `/users`   | `/restaurants`  | `/ratings`   |
-|**PUT**   | `/users?id=1` <br> `/users/{id}`   | `/restaurant?id=1` <br> `/restaurant/{id}`  | `/ratings?id=1` <br> `/ratings/{id}` <br> `/ratings/user_id=1&restaurant_id=2`   |  
+|**PUT**   | `/users?id=1` <br> `/users/{id}`   | `/restaurant?id=1` <br> `/restaurant/{id}` <br> `/restaurant?id=1&update_parent=true` <br> `/restaurant/{id}?update_parent=true` | `/ratings?id=1` <br> `/ratings/{id}` <br> `/ratings/user_id=1&restaurant_id=2`   |  
 |**DELETE**   | None  |  None  | None  |
 
 
@@ -35,71 +51,86 @@ The software stack of this web-service can be broken down as follows:
 
 ### Endpoints
 #### /v1
+**NOTE** : ALL endpoints that accept id as a parameter can be accessed as either `v1/entity/{id}` or `v1/entity?id={id}`. This is done to make integrating and developing new features in the front-end; that require to access the APIs, easier.
+
 * `/users`:
   * Description : Get user(s) info
     * Method Type: `GET`
-    * Input :
-    * Output :
+    * Parameters :
+      * `None` : can be called with no parameter
+      * `id` : can be called by user id(s)
+    * Input : None
+    * Output : JSON; Array of [models.User](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L12)
 
   * Description : Update a user
     * Method Type: `PUT`
-    * Input :
-    * Output :    
+    * Parameters :
+      * `id` : id of user to be updated
+    * Input : JSON of type [models.User](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L12)
+    * Output : JSON; status message
 
   * Description : Create a user
     * Method Type: `POST`
-    * Input :
-    * Output :
-
-  * Description :
-    * Method Type: `DELETE`
-    * Input :
-    * Output :
-
+    * Parameters :
+      * `None` : can be called with no parameter
+    * Input : JSON of type [models.User](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L12)
+    * Output : JSON; status message
 
 * `/restaurants`:
-
   * Description : Get restaurant(s) by name / city/ category/total score
     * Method Type: `GET`
-    * Input :
-    * Output :
+    * Parameters :
+      * `None` : can be called with no parameter
+      * `id` : can be called by restaurant by id(s)
+      * `zip_code` : can be called by 5 digit zip_code(s)
+      * `name` : can be called by name(s)
+      * `category` : can be called by category
+      * `city` : can be called by city
+      * `total_score` : can be called total_score
+    * Input : None
+    * Output : JSON; array of [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L20)
 
   * Description : Update a restaurant
     * Method Type: `PUT`
-    * Input :
-    * Output :    
+    * Parameters :
+      * `id` : can be called by restaurant by id(s). **NOTE** : changing the name of the restaurant will only impact this venue with given id
+      * `update_parent` : boolean, if enabled, changing the restaurant name/category will impact all other venues as well
+    * Input : JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L20)
+    * Output : JSON; status message
+
 
   * Description : Create a restaurant
     * Method Type: `POST`
-    * Input :
-    * Output :
+    * Parameters :
+      * `None` : can be called with no parameter
+    * Input : JSON; [models.Restaurant](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L20)
+    * Output : JSON; status message
 
-  * Description :
-    * Method Type: `DELETE`
-    * Input :
-    * Output :
-
-
-* `/reviews`:
-  * Description : Create a rating for a restaurant by a user
-    * Method Type: `POST`
-    * Input :
-    * Output :
+* `/ratings`:
+  * Description : Get ratings
+    * Method Type: `GET`
+    * Parameters :
+      * `None` : can be called with no parameter
+      * `id` : can be called by rating id(s)
+      * `user_id` : can be called by user id(s)
+      * `restaurant_id` : can be called by restaurant id(s)
+    * Input : None
+    * Output : JSON; array of type [models.UserRestaurantRating](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L42)
 
   * Description : Update a rating for a restaurant by a user
     * Method Type: `PUT`
-    * Input :
-    * Output :    
+    * Parameters :
+      * `id` : can be called by rating id
+    * Input : JSON; [models.Rating](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L28)
+    * Output : JSON; status message
 
-  * Description :
-    * Method Type: `GET`
-    * Input :
-    * Output :
+  * Description :  Create a rating for a restaurant by a user
+    * Method Type: `POST`
+    * Parameters :
+      * `None` : can be called with no parameter
+    * Input : JSON; [models.Rating](https://github.com/Skrelan/rest-restaurant/blob/develop/models/models.go#L28)
+    * Output :  JSON; status message
 
-  * Description :
-    * Method Type: `GET`
-    * Input :
-    * Output :
 
 -----
 
@@ -109,7 +140,10 @@ The DB has 4 tables, they are as follows:
 2. `restaurants`
 3. `venues`
 4. `ratings`
+The DB has 1 view
+1. `aggregated_venue_score`
 
+#### Tables:
 ##### 1.users
 |col_name   |type   |  
 |---|---|
@@ -154,7 +188,8 @@ constraints:
 |id   | SERIAL   |   
 |cost   |  SMALLINT |  
 |food   |  SMALLINT |   
-|cleanliness_service   |  SMALLINT |  
+|cleanliness  |  SMALLINT |  
+|service  |  SMALLINT |
 |total_score   |   NUMERIC(5,2) |
 | venue_id     |   INT          |
 | user_id      |   INT          |
@@ -170,6 +205,28 @@ constraints:
 * ` foreign key (user_id)
  REFERENCES users (id)`
 
+### Views
+
+##### aggregated_venue_score
+
+|col_name   | value   |  
+|---|---|
+|venue_id   | venues.id   |   
+|score   |  AVG(rate.total_score)) |  
+
+```
+CREATE OR REPLACE VIEW aggregated_venue_score AS
+SELECT
+    v.id as "venue_id",
+    AVG(rate.total_score) as "score"
+FROM ratings as rate
+INNER JOIN venues AS v
+ON rate.venue_id = v.id
+GROUP by v.id;
+```
+
+Diagram :
+![db](local/db_relations.png)
  ------
 
  ### Code distribution
@@ -191,5 +248,30 @@ constraints:
  * [encoding/json](https://golang.org/pkg/encoding/json/)
  * [fmt](https://golang.org/pkg/fmt/)
  * [strings](https://golang.org/pkg/strings/)
+ * [testify](https://github.com/stretchr/testify)
+ * [testing](https://golang.org/pkg/testing)
 
  ----
+
+### Running
+In order to run the web-service, make sure you have all the required packages installed and have GO 1.8 set up locally. Install the below package in your go root by either manually moving it there or by running `go get github.com/skrelan/rest-restaurant` _(it might fail as this repo is private)_
+
+Also make sure the following files exist, w.r.t project root.
+* `db/config.json`
+* `rest-restaurant`^
+
+^_optional_
+<br>
+
+To run the application go to the project root and either run:
+* Option 1
+```
+$ go build
+$ ./rest-restaurant
+```
+* Option 2
+```
+$ go run main.go
+```
+
+By default the application should listen to `localhost:8000` and all the API endpoints can be called on that.
